@@ -1,0 +1,428 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><title>CYOF</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#8c7166", "primary-fixed-dim": "#ffb595", "tertiary-fixed": "#ffdbcd", "on-tertiary-container": "#fffbff", "on-secondary-fixed": "#1c1b1b", "surface-container": "#f0ede9", "surface-bright": "#fcf9f4", "on-surface": "#1c1c19", "on-primary-fixed-variant": "#7c2e00", "on-secondary-fixed-variant": "#474646", "tertiary-container": "#c5500c", "background": "#fcf9f4", "secondary-container": "#e5e2e1", "on-surface-variant": "#594238", "surface-dim": "#dcdad5", "inverse-surface": "#31302d", "secondary": "#5f5e5e", "warm-ivory": "#F8F5F0", "champagne-beige": "#E9DFD2", "secondary-fixed": "#e5e2e1", "error-container": "#ffdad6", "muted-charcoal": "#57534E", "tertiary-fixed-dim": "#ffb596", "surface-container-high": "#ebe8e3", "inverse-on-surface": "#f3f0eb", "on-tertiary": "#ffffff", "on-primary-fixed": "#351000", "on-error": "#ffffff", "surface-variant": "#e5e2dd", "outline-variant": "#e0c0b2", "primary-fixed": "#ffdbcd", "primary-container": "#c64f00", "surface-container-highest": "#e5e2dd", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff", "tertiary": "#9f3c00", "on-error-container": "#93000a", "error": "#ba1a1a", "on-tertiary-fixed": "#360f00", "on-tertiary-fixed-variant": "#7d2d00", "inverse-primary": "#ffb595", "surface-tint": "#a23f00", "on-secondary-container": "#656464", "on-primary-container": "#fffbff", "on-background": "#1c1c19", "surface-container-low": "#f6f3ee", "accessible-orange": "#B94700", "surface": "#fcf9f4", "luxury-black": "#111111", "on-primary": "#ffffff", "primary": "#9e3d00", "secondary-fixed-dim": "#c8c6c5", "pure-white": "#FFFFFF" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-2xl": "4rem", "margin": "1rem", "gutter": "1rem", "margin-tablet": "2rem", "margin-desktop": "4rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter-desktop": "1.5rem" }, "fontFamily": { "headline-display": ["EB Garamond"], "headline-lg-mobile": ["EB Garamond"], "headline-md": ["EB Garamond"], "headline-lg": ["EB Garamond"], "label-caps-sm": ["Manrope"], "label-md": ["Manrope"], "label-caps-lg": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-sm": ["EB Garamond"], "body-sm": ["Manrope"], "headline-display-mobile": ["EB Garamond"] }, "fontSize": { "headline-display": ["56px", { "lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "30px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg": ["40px", { "lineHeight": "46px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "label-caps-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.2em", "fontWeight": "600" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }], "label-caps-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0.015em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "0.01em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "0.01em", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }], "headline-display-mobile": ["38px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "400" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><button aria-label="Go Back" class="w-11 h-11 flex items-center justify-center text-luxury-black transition-colors active:text-accessible-orange" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back_ios_new</span></button><h1 class="font-headline-sm text-headline-sm text-luxury-black tracking-[0.1em] uppercase font-normal text-center truncate max-w-[200px]">Checkout</h1><div class="flex items-center gap-1"><a aria-label="Shopping Bag" class="relative w-11 h-11 flex items-center justify-center text-luxury-black transition-colors active:text-accessible-orange" data-path="cart" href="#"><span class="material-symbols-outlined text-[22px]">shopping_bag</span><span class="absolute top-2 right-2 w-4 h-4 bg-primary text-on-primary font-label-caps-sm text-[9px] leading-[16px] rounded-full flex items-center justify-center font-bold">2</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-safe bg-surface pb-36"><div class="flex flex-col w-full text-on-surface">
+<!-- Trust Sub-Bar & Encryption Indicator -->
+<div class="w-full bg-surface-container-low px-margin py-2.5 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px] text-accessible-orange" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant">SSL 256-Bit Encrypted</span>
+</div>
+<a class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-on-surface-variant hover:text-luxury-black transition-colors flex items-center gap-1" href="#">
+<span class="">Shopping Bag (2)</span>
+<span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</a>
+</div>
+<!-- Stepper Indicator -->
+<div class="w-full px-margin pt-4 pb-3 bg-surface">
+<div class="flex items-center justify-between text-center relative">
+<!-- Background Connecting Track -->
+<div class="absolute top-1/2 left-6 right-6 -translate-y-1/2 h-0.5 bg-surface-container-highest -z-0"></div>
+<div class="absolute top-1/2 left-6 w-1/3 -translate-y-1/2 h-0.5 bg-accessible-orange -z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-accessible-orange text-on-primary flex items-center justify-center font-label-caps-sm text-label-caps-sm font-semibold shadow-sm">
+          1
+        </div>
+<span class="font-label-caps-sm text-label-caps-sm text-luxury-black font-semibold mt-1 tracking-wider uppercase">Contact &amp; Delivery</span>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-caps-sm text-label-caps-sm font-medium">
+          2
+        </div>
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant mt-1 tracking-wider uppercase">Payment</span>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-caps-sm text-label-caps-sm font-medium">
+          3
+        </div>
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant mt-1 tracking-wider uppercase">Confirmation</span>
+</div>
+</div>
+</div>
+<!-- Express Checkout Panel -->
+<div class="px-margin pt-3 pb-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant uppercase tracking-widest">Express Atelier Checkout</span>
+<span class="font-label-caps-sm text-label-caps-sm text-accessible-orange font-semibold uppercase tracking-wider">Instant Authorization</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<!-- Apple Pay -->
+<button aria-label="Express checkout with Apple Pay" class="h-11 bg-luxury-black text-pure-white rounded-lg flex items-center justify-center transition-opacity active:opacity-85 shadow-sm" type="button">
+<svg class="h-5 w-auto fill-current" viewBox="0 0 170 170">
+<path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.67-7.85-11.93-14.42-6-9.28-10.74-19.8-14.23-31.56-3.48-11.75-5.23-23.13-5.23-34.12 0-14.07 3.42-25.7 10.27-34.87 6.84-9.17 15.34-13.87 25.5-14.1 4.57 0 9.77 1.25 15.6 3.75 5.83 2.5 9.72 3.86 11.66 4.09 1.54-.34 5.57-1.76 12.09-4.26 6.53-2.5 12.03-3.64 16.51-3.41 12.57.69 22.56 5.3 29.97 13.84-10.98 6.64-16.35 15.75-16.12 27.32.23 9.06 3.63 16.73 10.2 23.01 6.57 6.28 14.52 9.8 23.85 10.57-2.3 7.07-5.11 14.38-8.41 21.94zM119.22 33.72c0-7.39 2.67-14.42 8.01-21.08 5.34-6.66 12.08-11.16 20.22-13.51.69 1.48 1.04 3.01 1.04 4.59 0 7.39-2.78 14.59-8.34 21.6-5.56 7.01-12.38 11.45-20.46 13.32-.15-1.57-.47-3.21-.47-4.92z"></path>
+</svg>
+</button>
+<!-- Google Pay -->
+<button aria-label="Express checkout with Google Pay" class="h-11 bg-surface-container-high text-on-surface rounded-lg flex items-center justify-center transition-colors active:bg-surface-container-highest shadow-sm" type="button">
+<span class="font-headline-sm text-headline-sm tracking-tight font-medium">G<span class="font-body-sm text-body-sm ml-0.5 tracking-normal uppercase text-on-surface-variant font-semibold">Pay</span></span>
+</button>
+<!-- PayPal -->
+<button aria-label="Express checkout with PayPal" class="h-11 bg-surface-container-high text-on-surface rounded-lg flex items-center justify-center transition-colors active:bg-surface-container-highest shadow-sm" type="button">
+<span class="font-body-md text-body-md italic font-bold tracking-tight text-on-surface">Pay<span class="text-accessible-orange">Pal</span></span>
+</button>
+</div>
+<div class="relative flex items-center justify-center my-3.5">
+<div class="w-full h-px bg-surface-container-high"></div>
+<span class="absolute bg-surface-container-lowest px-3 font-label-caps-sm text-label-caps-sm tracking-widest uppercase text-on-surface-variant">Or Continue Manually</span>
+</div>
+</div>
+</div>
+<!-- Form Content -->
+<form class="flex flex-col px-margin gap-4 pb-36" id="checkout-form">
+<!-- Section 1: Contact Information -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-wide text-luxury-black flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-accessible-orange/10 text-accessible-orange font-label-caps-sm text-label-caps-sm flex items-center justify-center font-bold">1</span>
+          Contact Details
+        </h2>
+<a class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-accessible-orange font-semibold underline underline-offset-2" href="#">Salon Sign In</a>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="contact-email">Email Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-[16px]" id="contact-email" placeholder="atelier.client@cyof.com" required="" type="email">
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant text-[18px]">mail</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[13px] text-accessible-orange">stars</span>
+          Earn 765 Salon Privé Archival Points upon completion.
+        </p>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="contact-phone">Mobile Phone</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-[16px]" id="contact-phone" placeholder="+1 (555) 019-2834" required="" type="tel">
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant text-[18px]">smartphone</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">For white-glove chauffeur appointment confirmation &amp; SMS tracking.</p>
+</div>
+</div>
+<!-- Section 2: Salon Delivery Address -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-wide text-luxury-black flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-accessible-orange/10 text-accessible-orange font-label-caps-sm text-label-caps-sm flex items-center justify-center font-bold">2</span>
+          Salon Delivery Address
+        </h2>
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant uppercase tracking-wider">Atelier Dispatch</span>
+</div>
+<!-- Country Selector -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="country-select">Country / Territory</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors pr-9" id="country-select">
+<option selected="" value="US">United States (NYC Salon Concierge Active)</option>
+<option value="FR">France (Paris Atelier 8e)</option>
+<option value="IT">Italy (Milano Montenapoleone)</option>
+<option value="UK">United Kingdom (Mayfair London)</option>
+<option value="JP">Japan (Ginza Flagship Tokyo)</option>
+<option value="CH">Switzerland (Genève)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- First & Last Name Two-Column Grid -->
+<div class="grid grid-cols-2 gap-2.5">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="first-name">First Name</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors" id="first-name" placeholder="Eleanor" required="" type="text">
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="last-name">Last Name</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors" id="last-name" placeholder="Vanderbilt" required="" type="text">
+</div>
+</div>
+<!-- Street Address -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="street-address">Street Address</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-[16px]" id="street-address" placeholder="740 Park Avenue" required="" type="text">
+<span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant text-[18px]">location_on</span>
+</div>
+</div>
+<!-- Apt / Suite / Villa -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="address-secondary">Apartment, Penthouse, Suite, Villa (Optional)</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-[16px]" id="address-secondary" placeholder="Penthouse 14B" type="text">
+</div>
+<!-- City, State, ZIP -->
+<div class="grid grid-cols-3 gap-2">
+<div class="flex flex-col gap-1 col-span-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="address-city">City</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-2.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors" id="address-city" placeholder="New York" required="" type="text">
+</div>
+<div class="flex flex-col gap-1 col-span-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="address-state">State</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-2.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors uppercase" id="address-state" placeholder="NY" required="" type="text">
+</div>
+<div class="flex flex-col gap-1 col-span-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="address-zip">Postal Code</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-2.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors" id="address-zip" placeholder="10021" required="" type="text">
+</div>
+</div>
+<!-- Delivery Method Selection -->
+<div class="pt-2 flex flex-col gap-2">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant">Select Handcrafted Delivery Experience</span>
+<!-- Option 1: White-Glove (Selected) -->
+<label class="cursor-pointer relative p-3.5 rounded-lg bg-surface-container-low transition-all block">
+<div class="flex items-start gap-3">
+<input checked="" class="mt-0.5 accent-accessible-orange w-4 h-4 cursor-pointer" name="delivery-mode" type="radio" value="white-glove">
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md font-semibold text-luxury-black">White-Glove Private Courier</span>
+<span class="font-label-caps-sm text-label-caps-sm text-accessible-orange uppercase tracking-wider font-bold">Complimentary</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                In-room fitting, custom hanger presentation &amp; archival garment bag included. Delivered tomorrow evening.
+              </p>
+</div>
+</div>
+</label>
+<!-- Option 2: Armored Discreet Freight -->
+<label class="cursor-pointer relative p-3.5 rounded-lg bg-surface-container-low transition-all block">
+<div class="flex items-start gap-3">
+<input class="mt-0.5 accent-accessible-orange w-4 h-4 cursor-pointer" name="delivery-mode" type="radio" value="armored-freight">
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md font-semibold text-luxury-black">Signature Discreet Armored Freight</span>
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant uppercase tracking-wider">Complimentary</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                Tamper-evident temperature-controlled vault transport with direct signature required.
+              </p>
+</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Section 3: Payment Method -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-wide text-luxury-black flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-accessible-orange/10 text-accessible-orange font-label-caps-sm text-label-caps-sm flex items-center justify-center font-bold">3</span>
+          Payment Method
+        </h2>
+<span class="font-label-caps-sm text-label-caps-sm text-accessible-orange font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+          Secured
+        </span>
+</div>
+<!-- Payment Tabs -->
+<div class="grid grid-cols-3 gap-1 bg-surface-container p-1 rounded-lg">
+<button class="py-2 text-center rounded-md font-label-caps-sm text-label-caps-sm uppercase tracking-wider bg-surface-container-lowest text-luxury-black font-semibold shadow-xs" type="button">
+          Card
+        </button>
+<button class="py-2 text-center rounded-md font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant font-medium" type="button">
+          Wire Transfer
+        </button>
+<button class="py-2 text-center rounded-md font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant font-medium" type="button">
+          Klarna Split
+        </button>
+</div>
+<!-- Card Inputs -->
+<div class="flex flex-col gap-3 pt-1">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="card-number">Card Number</label>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<!-- Visa Icon -->
+<span class="font-label-caps-sm text-label-caps-sm font-bold tracking-tighter text-on-surface-variant">VISA</span>
+<span class="text-surface-dim font-light">|</span>
+<!-- Mastercard Icon Circles -->
+<span class="font-label-caps-sm text-label-caps-sm font-bold tracking-tighter text-on-surface-variant">MC</span>
+<span class="text-surface-dim font-light">|</span>
+<span class="font-label-caps-sm text-label-caps-sm font-bold tracking-tighter text-on-surface-variant">AMEX</span>
+</div>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors tracking-wide text-[16px]" id="card-number" maxlength="19" placeholder="4532 •••• •••• 8892" required="" type="text">
+<span class="material-symbols-outlined absolute right-3 top-3 text-accessible-orange text-[18px]">credit_card</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2.5">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="card-expiry">Expiration</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-center" id="card-expiry" maxlength="5" placeholder="MM / YY" required="" type="text">
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="card-cvc">Security Code</label>
+<span class="material-symbols-outlined text-[13px] text-on-surface-variant" title="3-4 digits located on the back or front of your card">help_outline</span>
+</div>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors text-center" id="card-cvc" maxlength="4" placeholder="CVC" required="" type="password">
+</div>
+</div>
+<!-- Name on Card -->
+<div class="flex flex-col gap-1">
+<label class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-on-surface-variant" for="card-holder">Cardholder Name</label>
+<input class="w-full bg-surface-container-low text-luxury-black font-body-md text-body-md px-3.5 py-3 rounded-lg focus:outline-none focus:bg-surface-container-highest transition-colors uppercase tracking-wider text-[16px]" id="card-holder" placeholder="ELEANOR VANDERBILT" required="" type="text">
+</div>
+<!-- Billing checkbox -->
+<label class="flex items-center gap-2.5 pt-1 cursor-pointer">
+<input checked="" class="w-4 h-4 accent-accessible-orange rounded cursor-pointer" type="checkbox">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Billing address same as salon delivery address</span>
+</label>
+</div>
+</div>
+<!-- Atelier Provenance & Trust Pillars -->
+<div class="bg-surface-container p-4 rounded-xl flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accessible-orange text-[20px] mt-0.5">workspace_premium</span>
+<div>
+<h4 class="font-label-caps-sm text-label-caps-sm font-semibold uppercase tracking-wider text-luxury-black">Official CYOF Haute Couture Guarantee</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Every creation is certified authentic with an immutable NFC provenance chip registered in your private vault.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accessible-orange text-[20px] mt-0.5">eco</span>
+<div>
+<h4 class="font-label-caps-sm text-label-caps-sm font-semibold uppercase tracking-wider text-luxury-black">Carbon-Neutral Chauffeur Transport</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Zero-emission electric luxury courier fleet handling every metropolitan distribution direct from the atelier.</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accessible-orange text-[20px] mt-0.5">straighten</span>
+<div>
+<h4 class="font-label-caps-sm text-label-caps-sm font-semibold uppercase tracking-wider text-luxury-black">Direct Atelier Provenance &amp; Fit Service</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Complimentary alterations available within 30 days at any global flagship salon upon presentation of your order token.</p>
+</div>
+</div>
+</div>
+</form>
+<!-- Sticky Collapsible Bottom Order Review & Authorization Bar -->
+<div class="fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-xl shadow-xl flex flex-col pb-safe">
+<!-- Expandable Order Drawer Preview (Default Collapsed, Toggled by Header) -->
+<div class="overflow-hidden transition-all duration-300 max-h-0 bg-surface-container-low px-margin" id="order-drawer">
+<div class="py-3 flex flex-col gap-3">
+<div class="flex items-center justify-between pb-1">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-on-surface-variant font-semibold">Your Selected Garments (2)</span>
+<span class="font-label-caps-sm text-label-caps-sm text-accessible-orange uppercase tracking-wider">Atelier Reserve Hold Active</span>
+</div>
+<!-- Item 1 -->
+<div class="flex items-center gap-3 bg-surface-container-lowest p-2 rounded-lg shadow-xs">
+<img class="w-14 h-18 object-cover rounded" data-alt="High-fashion architectural tailored evening coat in midnight black virgin wool draped cleanly against a minimalist warm ivory boutique backdrop with soft diffused museum-grade lighting, crisp editorial couture presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApWTnxeK7KR9Sh3UcLzRS6KV8rejGsrFtZVUiRMHykNUscfp4zuaU-i5cr-4EIMkhnORZ80PwPO1E6ML4ahtUAZP2g9n2ZbaXRvmDwOQsGd1CaPi2r2e48keeuHuJWVIDA3Gg1TpKkau_AZckeVgb4A75j02pWbcqoN2V-Hk1CHgKdy3elUfu2NzR97DmX2tshlUfsb0wHzkfG4QH-vOglIPcOo9XAWZ7oKeny433D">
+<div class="flex-1 min-w-0">
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant uppercase tracking-wider block">Collection Automne-Hiver</span>
+<h4 class="font-headline-sm text-headline-sm text-luxury-black truncate">L'Architecte Cashmere Overcoat</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Size 38 FR / Noir Absolu</span>
+<span class="font-body-md text-body-md font-semibold text-luxury-black">$5,200.00</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-3 bg-surface-container-lowest p-2 rounded-lg shadow-xs">
+<img class="w-14 h-18 object-cover rounded" data-alt="Handcrafted artisanal calfskin structured vanity shoulder bag in warm terracotta burnt orange leather with brushed palladium hardware sitting on a champagne beige travertine pedestal in high-end Parisian studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATn3VviH1BremWjsFJPNkY9XVfU9OzQCsLVe2eg_8Mpspy7FvECjsaJIICr8Hsyk_0p8eozhrgmKunAGxmlv5g6ZMC8snBeV_EIyyivoqVc1td8coWiAC5KSe3hEvORPskotPCGq-jk2BxnPDggoLlCxjEh1jr08FMQAMukmcCgx9DNKD4x5prXYQRxDKhGjRIRDPcrrwn5SltQWkFW3NnhCJPZhWWMyRw6TB0RWSR">
+<div class="flex-1 min-w-0">
+<span class="font-label-caps-sm text-label-caps-sm text-on-surface-variant uppercase tracking-wider block">CYOF Maroquinerie</span>
+<h4 class="font-headline-sm text-headline-sm text-luxury-black truncate">Le Carré Structured Flap Bag</h4>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Terre Cuite / Palladium</span>
+<span class="font-body-md text-body-md font-semibold text-luxury-black">$2,450.00</span>
+</div>
+</div>
+</div>
+<!-- Subtotal breakdown -->
+<div class="flex flex-col gap-1 pt-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex justify-between">
+<span class="">Subtotal (2 pieces)</span>
+<span class="text-luxury-black font-medium">$7,650.00</span>
+</div>
+<div class="flex justify-between">
+<span class="">White-Glove In-Room Delivery</span>
+<span class="text-accessible-orange font-semibold uppercase font-label-caps-sm text-label-caps-sm">Complimentary</span>
+</div>
+<div class="flex justify-between">
+<span class="">Archival Care &amp; Insured Transit</span>
+<span class="text-accessible-orange font-semibold uppercase font-label-caps-sm text-label-caps-sm">Complimentary</span>
+</div>
+<div class="flex justify-between">
+<span class="">Estimated Local Sales Tax</span>
+<span class="text-on-surface-variant">Included at Atelier</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Toggle Strip -->
+<button class="w-full px-margin pt-2.5 pb-1 flex items-center justify-between text-left focus:outline-none" id="drawer-toggle-btn" type="button">
+<div class="flex items-center gap-2">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-on-surface-variant font-semibold">Total Due</span>
+<div class="flex -space-x-2 overflow-hidden">
+<div class="inline-block h-6 w-6 rounded-full bg-surface-container-highest overflow-hidden shadow-xs">
+<img class="h-full w-full object-cover" data-alt="Close up architectural cut of a luxury black tailored lapel coat with warm studio illumination." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdjuOstIuYVbwVt09HRz2Li1WAxcpNU2Z9eVRq50zXjGSR9wxg-AT3T3pIKlZK3Zn5l3OXSbwBEiM34PNa-mpdip-uQrvr20N1HZMxi90wauCXgdKtwnG9Krwz7kJfiFFUAKXsub9oPZp0GSQ9R_bvVkLkv0PHIgKxEPSPrYfTW-iJSkM9tK4fMNnkndi4GDLGXzEMq_8nojWKSZYnGH9-_EZ45wIoglwleEFM0ovM">
+</div>
+<div class="inline-block h-6 w-6 rounded-full bg-surface-container-highest overflow-hidden shadow-xs">
+<img class="h-full w-full object-cover" data-alt="Micro texture swatch of burnt orange French box calfskin luxury leather with fine edge stitching." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOAWKi8NN9Gu1SbibsFW0wYlXEYGK_ILpyXLuZyDkm7d8zt8NwoDTOAfCDmcVzsX4MDZMh7TmZX1OEduVttmLZUfMP1457BHo7w4riceyUm0HmRg8N2lk1MeLb5EkcWWeeObjOm9YLCVLwWIwjGOuAfaNJ-7w5ZlxcH0kio19J5H2Ijl7IaK2yC9SxQ5aRntQ2jqd2fanjq5Lr5KPcwuiKm6q72EDUzDpV8YuFXJOf">
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(2 Pieces)</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant transition-transform duration-200" id="chevron-icon">expand_less</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-luxury-black font-semibold">$7,650.00</span>
+</button>
+<!-- Main Authorize Action Button -->
+<div class="px-margin pt-1.5 pb-3">
+<button class="w-full h-[54px] bg-accessible-orange text-pure-white rounded-lg flex items-center justify-center gap-2 uppercase font-label-caps-lg text-label-caps-lg tracking-widest font-semibold transition-all duration-150 active:scale-[0.99] shadow-md hover:bg-primary-container" form="checkout-form" type="submit">
+<span class="material-symbols-outlined text-[19px]">lock</span>
+<span class="">Authorize Transaction &amp; Place Order — $7,650.00</span>
+</button>
+<div class="flex items-center justify-center gap-1.5 mt-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[12px] text-accessible-orange">verified</span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-[9px]">Direct Atelier Fulfillment &amp; 30-Day Complimentary Salon Returns</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Interactive Drawer Toggle Micro-interaction
+  const toggleBtn = document.getElementById('drawer-toggle-btn');
+  const drawer = document.getElementById('order-drawer');
+  const chevron = document.getElementById('chevron-icon');
+  let isDrawerOpen = false;
+
+  if (toggleBtn && drawer && chevron) {
+    toggleBtn.addEventListener('click', () => {
+      isDrawerOpen = !isDrawerOpen;
+      if (isDrawerOpen) {
+        drawer.style.maxHeight = '320px';
+        chevron.style.transform = 'rotate(180deg)';
+      } else {
+        drawer.style.maxHeight = '0px';
+        chevron.style.transform = 'rotate(0deg)';
+      }
+    });
+  }
+
+  // Smooth credit card formatting interaction
+  const cardInput = document.getElementById('card-number');
+  if (cardInput) {
+    cardInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = value;
+    });
+  }
+
+  const expiryInput = document.getElementById('card-expiry');
+  if (expiryInput) {
+    expiryInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length > 2) {
+        val = val.substring(0, 2) + ' / ' + val.substring(2, 4);
+      }
+      e.target.value = val;
+    });
+  }
+</script></main>
+
+
+
+</body></html>

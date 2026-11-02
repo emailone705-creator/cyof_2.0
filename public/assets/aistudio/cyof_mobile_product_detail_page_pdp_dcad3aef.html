@@ -1,0 +1,552 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><title>CYOF</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline": "#8c7166", "primary-fixed-dim": "#ffb595", "tertiary-fixed": "#ffdbcd", "on-tertiary-container": "#fffbff", "on-secondary-fixed": "#1c1b1b", "surface-container": "#f0ede9", "surface-bright": "#fcf9f4", "on-surface": "#1c1c19", "on-primary-fixed-variant": "#7c2e00", "on-secondary-fixed-variant": "#474646", "tertiary-container": "#c5500c", "background": "#fcf9f4", "secondary-container": "#e5e2e1", "on-surface-variant": "#594238", "surface-dim": "#dcdad5", "inverse-surface": "#31302d", "secondary": "#5f5e5e", "warm-ivory": "#F8F5F0", "champagne-beige": "#E9DFD2", "secondary-fixed": "#e5e2e1", "error-container": "#ffdad6", "muted-charcoal": "#57534E", "tertiary-fixed-dim": "#ffb596", "surface-container-high": "#ebe8e3", "inverse-on-surface": "#f3f0eb", "on-tertiary": "#ffffff", "on-primary-fixed": "#351000", "on-error": "#ffffff", "surface-variant": "#e5e2dd", "outline-variant": "#e0c0b2", "primary-fixed": "#ffdbcd", "primary-container": "#c64f00", "surface-container-highest": "#e5e2dd", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff", "tertiary": "#9f3c00", "on-error-container": "#93000a", "error": "#ba1a1a", "on-tertiary-fixed": "#360f00", "on-tertiary-fixed-variant": "#7d2d00", "inverse-primary": "#ffb595", "surface-tint": "#a23f00", "on-secondary-container": "#656464", "on-primary-container": "#fffbff", "on-background": "#1c1c19", "surface-container-low": "#f6f3ee", "accessible-orange": "#B94700", "surface": "#fcf9f4", "luxury-black": "#111111", "on-primary": "#ffffff", "primary": "#9e3d00", "secondary-fixed-dim": "#c8c6c5", "pure-white": "#FFFFFF" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-2xl": "4rem", "margin": "1rem", "gutter": "1rem", "margin-tablet": "2rem", "margin-desktop": "4rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter-desktop": "1.5rem" }, "fontFamily": { "headline-display": ["EB Garamond"], "headline-lg-mobile": ["EB Garamond"], "headline-md": ["EB Garamond"], "headline-lg": ["EB Garamond"], "label-caps-sm": ["Manrope"], "label-md": ["Manrope"], "label-caps-lg": ["Manrope"], "body-md": ["Manrope"], "body-lg": ["Manrope"], "headline-sm": ["EB Garamond"], "body-sm": ["Manrope"], "headline-display-mobile": ["EB Garamond"] }, "fontSize": { "headline-display": ["56px", { "lineHeight": "60px", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "30px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-lg": ["40px", { "lineHeight": "46px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "label-caps-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.2em", "fontWeight": "600" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }], "label-caps-lg": ["13px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0.015em", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "0.01em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "0.01em", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }], "headline-display-mobile": ["38px", { "lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "400" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><button aria-label="Go Back" class="w-11 h-11 flex items-center justify-center text-luxury-black transition-colors active:text-accessible-orange" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back_ios_new</span></button><h1 class="font-headline-sm text-headline-sm text-luxury-black tracking-[0.1em] uppercase font-normal text-center truncate max-w-[200px]">Product Detail</h1><div class="flex items-center gap-1"><a aria-label="Shopping Bag" class="relative w-11 h-11 flex items-center justify-center text-luxury-black transition-colors active:text-accessible-orange" data-path="cart" href="#"><span class="material-symbols-outlined text-[22px]">shopping_bag</span><span class="absolute top-2 right-2 w-4 h-4 bg-primary text-on-primary font-label-caps-sm text-[9px] leading-[16px] rounded-full flex items-center justify-center font-bold">2</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-safe bg-surface pb-32"><div class="flex flex-col w-full pb-32">
+<!-- Breadcrumb Navigation Bar -->
+<div class="px-margin pt-3 pb-2 flex items-center justify-between text-on-surface-variant font-label-caps-sm text-label-caps-sm uppercase tracking-widest">
+<a class="flex items-center gap-1.5 hover:text-primary transition-colors py-1" href="#">
+<span class="material-symbols-outlined text-[14px]">arrow_back</span>
+<span class="">Leather Goods / Totes &amp; Carryalls</span>
+</a>
+<span class="text-secondary font-label-caps-sm text-label-caps-sm">Ref. 883-MZ-09</span>
+</div>
+<!-- Editorial Carousel Area -->
+<div class="relative w-full overflow-hidden bg-surface-container-low select-none">
+<div class="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar" id="carousel-track" style="scrollbar-width: none; -ms-overflow-style: none;">
+<!-- Slide 1: Main Sculptural Silhouette -->
+<div class="w-full shrink-0 snap-center relative aspect-[4/5] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Editorial studio photograph of the Palazzo Sculptural Calfskin Tote in terracotta burnt orange leather, architectural geometry, crisp studio spotlight casting soft warm shadows on warm ivory background, high fashion monograph composition, ultra high definition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_SJFG-LZrBUWfBvEd-l_LVKVh95WMxKfu4fRolQy7C5Y-y21o9TPqrqUdtTxcqHw2VwvT0v3NKI21gGxiWOZBr6_mw1QdPSrSM-uNUj47EGzbhHOPaHgl2PTGsm-ytVU-3QOMnIw31fe4MAaoVATCJfBqhf8tvNCA_rYZN8-L5h3fTOWeROXxejrSB-yTj746fEiEkd6urt-Mdb0WgRN_WNw27W_djKzo3jZEMvwj">
+</div>
+<!-- Slide 2: Saddle Stitch Detail -->
+<div class="w-full shrink-0 snap-center relative aspect-[4/5] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Extreme macro luxury detail shot of artisanal hand saddle stitching on burnt orange Tuscan calfskin leather, showing rich organic grain, edge burnishing in deep cognac, soft directional gallery light, minimalist prestige editorial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6rKKVOWRvtQXa80PrYjGvJa9lahj9UbG9IjeCWle2ax4xnaZ9z-SIIsYeTXLN6uKfGas3kB9WSgSgRu-44qrlBEXcg5jcsFc3iJdtSUO8BWiaWlGqwV0UZSgQV26kwmIptTJP8qYYH93ExsOdLqsC_xWkU_2UIPpyBcEHfEHp9jd7MgdrJ15hQHxEgJbTR9BrQGKniDvNuHhFFbJfMvaFrOdpxm5dDdbhcS8qh-0q">
+</div>
+<!-- Slide 3: Model Silhouette in Motion -->
+<div class="w-full shrink-0 snap-center relative aspect-[4/5] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Haute couture editorial photograph of an elegant model walking through modern Milanese stone architecture, wearing a minimalist sand cashmere coat while carrying the sculptural terracotta leather tote, dynamic natural afternoon golden light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk_OcfgZr6VtPZndqFDtll75kO3PcHMvgfvAYIqfIp6h-6FrmmOLn-OkDkrEcqNfTNYigxQ05lE8Neqy_uZer-utxx0qayoWU5oLMb3xDTgyjkLFDbR5IDUykdlLI9wShBmRef-x7qcfYzs5hNN2ki_vJUwN_-cFFjtxzrUm04_eZb4ImmQkXRRPUKcu5GnYSa_dcwfL27lSkCPUqI3y5GXoSdj40gdmVuRxUV7msM">
+</div>
+<!-- Slide 4: Interior Cavity & Solid Hardware -->
+<div class="w-full shrink-0 snap-center relative aspect-[4/5] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Overhead luxury interior view of tote open showing velvety caramel micro-suede lining, solid brushed champagne brass hardware, heat-stamped gold foil MAISON crest, and interior partitioned pocket." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4B8t4kBTB3EY4Rd-Z5NMPvBIz-oexMf4xtkbuESmcUTB5cTphtuHz7oBlppzzh4ZHssC5RgZti0Jrs8VDmDNw_A0J1iEhKted6jDKNNbvIvicHnE4mrwBHSNuyR7XWIj5gY7hU4eL05V_vRwrg0p7n68iA0itl8CdM5gDKV6FvKmtGhRRytKePNa-t1a30pzKBdAmZER10kRHJaK6mqocBM9SLEooH3uoHYpP0zkG">
+</div>
+<!-- Slide 5: Architectural Gusset & Profile -->
+<div class="w-full shrink-0 snap-center relative aspect-[4/5] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Side profile architectural perspective of the Palazzo calfskin tote showing sculptural accordioned gussets and clean structural silhouette resting upon a travertine stone pedestal under soft diffuse lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoxefo6LKtRw_W6UIrHBZHLQD8HIfRexce2qV9T00tAxfd_T1cZo7rKTLifX_HH1kxH2EmxjgEzPi9xS5hH9M73yPFOQncXXKax2OpnhQ0s9dKFSzQGbumj95bY35A1mJY-Fph8GWMm4DS8w67QM1EgdssKYZDKOFwxxL0eeCEiZB6kWS39QuZyLad47MMJ0XpXUOCmxkmxLLuYXkog0pSnpkemLqUCUMJFv6b_bst">
+</div>
+</div>
+<!-- Floating Top Metadata & Wishlist Toggle -->
+<div class="absolute top-4 inset-x-margin flex items-center justify-between pointer-events-none">
+<div class="bg-surface/90 backdrop-blur-md px-3 py-1 text-on-surface shadow-sm pointer-events-auto">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-primary">New Arrival • Atelier Series</span>
+</div>
+<button aria-label="Save to Wishlist" class="w-10 h-10 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-luxury-black shadow-sm pointer-events-auto active:scale-95 transition-transform" id="wishlist-btn" onclick="toggleWishlist()">
+<span class="material-symbols-outlined text-[20px] transition-colors" id="wishlist-icon">favorite_border</span>
+</button>
+</div>
+<!-- Carousel Floating Indicators -->
+<div class="absolute bottom-4 inset-x-margin flex items-center justify-between pointer-events-none">
+<!-- Dots -->
+<div class="flex items-center gap-1.5 bg-surface/85 backdrop-blur-md px-2.5 py-1.5 rounded-full pointer-events-auto">
+<div class="carousel-dot w-1.5 h-1.5 rounded-full bg-luxury-black transition-all"></div>
+<div class="carousel-dot w-1.5 h-1.5 rounded-full bg-surface-dim transition-all"></div>
+<div class="carousel-dot w-1.5 h-1.5 rounded-full bg-surface-dim transition-all"></div>
+<div class="carousel-dot w-1.5 h-1.5 rounded-full bg-surface-dim transition-all"></div>
+<div class="carousel-dot w-1.5 h-1.5 rounded-full bg-surface-dim transition-all"></div>
+</div>
+<!-- Counter -->
+<div class="bg-surface/85 backdrop-blur-md px-3 py-1 rounded-full text-on-surface font-label-caps-sm text-label-caps-sm tracking-widest pointer-events-auto">
+<span id="carousel-counter" class="">01 / 05</span>
+</div>
+</div>
+</div>
+<!-- Primary Product Header Details -->
+<div class="px-margin pt-6 pb-5 flex flex-col gap-2 bg-surface">
+<div class="flex items-center gap-2">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-secondary">Atelier Firenze</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-primary">Edition of 120</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-luxury-black font-normal leading-tight">
+      The Palazzo Sculptural Calfskin Tote
+    </h2>
+<div class="flex items-baseline gap-3 pt-1">
+<span class="font-headline-md text-headline-md text-luxury-black font-normal tracking-tight">$3,450</span>
+<span class="font-body-md text-body-md text-secondary">/ €3,150</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 pt-0.5">
+<span class="material-symbols-outlined text-[16px] text-accessible-orange">verified</span>
+      VAT &amp; import customs included. Complimentary white-glove courier.
+    </p>
+</div>
+<!-- Boutique Atelier Stock Notification Banner -->
+<div class="mx-margin mb-6 p-3.5 bg-surface-container flex items-center justify-between gap-3">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-2 h-2 rounded-full bg-accessible-orange shrink-0 animate-pulse"></span>
+<div class="truncate">
+<p class="font-label-md text-label-md text-luxury-black truncate font-semibold">Milan Flagship — Via Montenapoleone</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Only 3 pieces remaining in salon stock</p>
+</div>
+</div>
+<button class="shrink-0 font-label-caps-sm text-label-caps-sm uppercase text-primary font-semibold tracking-wider hover:text-accessible-orange transition-colors" onclick="openSalonModal()">
+      Hold In Salon
+    </button>
+</div>
+<!-- Product Configuration Controls -->
+<div class="px-margin flex flex-col gap-6">
+<!-- Shade Selector -->
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-luxury-black">
+          Shade: <span class="font-medium text-secondary" id="selected-shade-name">Terracotta Nappa</span>
+</span>
+<span class="font-label-caps-sm text-label-caps-sm text-secondary uppercase">Vegetable Tanned</span>
+</div>
+<!-- Swatch Matrix -->
+<div class="flex items-center gap-3">
+<!-- Terracotta (Active) -->
+<button aria-label="Select Terracotta Nappa" class="shade-swatch p-0.5 rounded-full ring-1 ring-luxury-black ring-offset-2 ring-offset-surface focus:outline-none transition-all w-11 h-11 flex items-center justify-center" onclick="selectShade(this, 'Terracotta Nappa')">
+<span class="block w-7 h-7 rounded-full bg-primary shadow-inner"></span>
+</button>
+<!-- Nero Profondo -->
+<button aria-label="Select Nero Profondo" class="shade-swatch p-0.5 rounded-full ring-0 ring-offset-2 ring-offset-surface focus:outline-none transition-all opacity-85 hover:opacity-100 w-11 h-11 flex items-center justify-center" onclick="selectShade(this, 'Nero Profondo')">
+<span class="block w-7 h-7 rounded-full bg-luxury-black shadow-inner"></span>
+</button>
+<!-- Sable Blanc -->
+<button aria-label="Select Sable Blanc" class="shade-swatch p-0.5 rounded-full ring-0 ring-offset-2 ring-offset-surface focus:outline-none transition-all opacity-85 hover:opacity-100 w-11 h-11 flex items-center justify-center" onclick="selectShade(this, 'Sable Blanc')">
+<span class="block w-7 h-7 rounded-full bg-[#E5DDD0] shadow-inner"></span>
+</button>
+<!-- Avorio -->
+<button aria-label="Select Avorio" class="shade-swatch p-0.5 rounded-full ring-0 ring-offset-2 ring-offset-surface focus:none transition-all opacity-85 hover:opacity-100 w-11 h-11 flex items-center justify-center" onclick="selectShade(this, 'Avorio')">
+<span class="block w-7 h-7 rounded-full bg-[#F3EFEA] shadow-inner"></span>
+</button>
+</div>
+</div>
+<!-- Size Model Selector -->
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<span class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-luxury-black">Select Scale</span>
+<button class="font-label-caps-sm text-label-caps-sm uppercase text-secondary underline decoration-secondary/50 underline-offset-4 hover:text-luxury-black transition-colors" onclick="toggleSizeGuide()">
+          Measurement Guide
+        </button>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<!-- Small -->
+<button class="size-pill p-3 text-left bg-surface-container-low hover:bg-surface-container active:scale-[0.98] transition-all" onclick="selectSize(this, 'Small', '24 × 30 cm')">
+<p class="font-label-md text-label-md text-luxury-black font-semibold">Small</p>
+<p class="font-body-sm text-body-sm text-secondary pt-0.5">24 × 30 cm</p>
+</button>
+<!-- Medium (Selected) -->
+<button class="size-pill p-3 text-left bg-luxury-black text-pure-white shadow-sm active:scale-[0.98] transition-all" onclick="selectSize(this, 'Medium', '29 × 38 cm')">
+<p class="font-label-md text-label-md text-pure-white font-semibold">Medium</p>
+<p class="font-body-sm text-body-sm text-surface-variant pt-0.5">29 × 38 cm</p>
+</button>
+<!-- Grand -->
+<button class="size-pill p-3 text-left bg-surface-container-low hover:bg-surface-container active:scale-[0.98] transition-all" onclick="selectSize(this, 'Grand', '35 × 45 cm')">
+<p class="font-label-md text-label-md text-luxury-black font-semibold">Grand</p>
+<p class="font-body-sm text-body-sm text-secondary pt-0.5">35 × 45 cm</p>
+</button>
+</div>
+</div>
+<!-- Interactive Size & Measurement Modal Box (Collapsible helper) -->
+<div class="hidden p-4 bg-surface-container flex flex-col gap-3 transition-all duration-300" id="size-guide-drawer">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-luxury-black">Sculptural Scale Dimensions</span>
+<button class="text-luxury-black hover:text-primary" onclick="toggleSizeGuide()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="space-y-2 text-on-surface font-body-sm text-body-sm">
+<div class="flex justify-between py-1 bg-surface-container-high px-2">
+<span class="font-semibold">Medium (Selected Model):</span>
+<span class="">Fits 14" Laptop, Document Folio &amp; Daily Essentials</span>
+</div>
+<div class="flex justify-between py-1 px-2">
+<span class="">Handle Drop:</span>
+<span class="">18.5 cm (Arm or Hand Carry)</span>
+</div>
+<div class="flex justify-between py-1 px-2">
+<span class="">Base Depth:</span>
+<span class="">14 cm Architectural Flare</span>
+</div>
+</div>
+</div>
+<!-- Salon & Concierge Dual Assistance Action Buttons -->
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="h-12 px-4 bg-surface-container-high text-luxury-black font-label-caps-sm text-label-caps-sm uppercase tracking-wider font-semibold flex items-center justify-center gap-2 hover:bg-surface-dim transition-colors active:scale-[0.99]" onclick="triggerConciergeToast('Salon consultation booked')">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="">Book Salon</span>
+</button>
+<button class="h-12 px-4 bg-surface-container-high text-luxury-black font-label-caps-sm text-label-caps-sm uppercase tracking-wider font-semibold flex items-center justify-center gap-2 hover:bg-surface-dim transition-colors active:scale-[0.99]" onclick="triggerConciergeToast('Connecting with Senior Client Advisor')">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Concierge Advice</span>
+</button>
+</div>
+<!-- Luxury Pillar Badges -->
+<div class="grid grid-cols-3 gap-2 py-4 bg-surface-container-low px-3">
+<div class="flex flex-col items-center text-center gap-1.5">
+<span class="material-symbols-outlined text-[22px] text-accessible-orange">handyman</span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-luxury-black font-semibold">Handmade in Italy</span>
+<span class="font-body-sm text-[11px] text-secondary">Tuscan Leather Guild</span>
+</div>
+<div class="flex flex-col items-center text-center gap-1.5">
+<span class="material-symbols-outlined text-[22px] text-accessible-orange">local_shipping</span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-luxury-black font-semibold">Express Courier</span>
+<span class="font-body-sm text-[11px] text-secondary">Dispatched within 24h</span>
+</div>
+<div class="flex flex-col items-center text-center gap-1.5">
+<span class="material-symbols-outlined text-[22px] text-accessible-orange">assignment_return</span>
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-luxury-black font-semibold">30-Day Returns</span>
+<span class="font-body-sm text-[11px] text-secondary">White-glove doorstep</span>
+</div>
+</div>
+</div>
+<!-- Collapsible Luxury Accordion Drawers -->
+<div class="mt-8 px-margin flex flex-col gap-2">
+<!-- Accordion 1: Design & Craftsmanship (Initially Expanded) -->
+<div class="bg-surface-container-low overflow-hidden">
+<button aria-expanded="true" class="w-full p-4 flex items-center justify-between text-left focus:outline-none" onclick="toggleAccordion('acc-1', 'icon-1')">
+<span class="font-headline-sm text-headline-sm text-luxury-black">Design &amp; Craftsmanship</span>
+<span class="material-symbols-outlined text-luxury-black transition-transform duration-300 rotate-180" id="icon-1">expand_more</span>
+</button>
+<div class="px-4 pb-5 pt-1 space-y-3 font-body-md text-body-md text-on-surface-variant" id="acc-1">
+<p class="">
+          Carved with monolithic geometric restraint, The Palazzo Tote embodies 19 continuous hours of artisanal edge-finishing and shaping by master leathercrafters in Florence.
+        </p>
+<div class="space-y-1.5 pt-1">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="font-label-md text-label-md font-medium">100% Tuscan Florentine provenance</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="font-label-md text-label-md font-medium">Integrated microchip NFC luxury authenticity passport</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span class="font-label-md text-label-md font-medium">Reinforced dual sculpted handles with 6-ply waxed thread</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Accordion 2: Materials & Care -->
+<div class="bg-surface-container-low overflow-hidden">
+<button aria-expanded="false" class="w-full p-4 flex items-center justify-between text-left focus:outline-none" onclick="toggleAccordion('acc-2', 'icon-2')">
+<span class="font-headline-sm text-headline-sm text-luxury-black">Materials &amp; Care</span>
+<span class="material-symbols-outlined text-luxury-black transition-transform duration-300" id="icon-2">expand_more</span>
+</button>
+<div class="hidden px-4 pb-5 pt-1 space-y-3 font-body-md text-body-md text-on-surface-variant" id="acc-2">
+<p class="">
+          Constructed from ultra-grade full-grain Tuscan calfskin, tanned strictly using natural chestnut and mimosa tannins for an inimitable patina over decades of ownership.
+        </p>
+<p class="font-body-sm text-body-sm text-secondary">
+          Store inside the provided archival cotton dust pouch stuffed with acid-free tissue. Keep away from prolonged intense direct moisture or solvent sprays.
+        </p>
+</div>
+</div>
+<!-- Accordion 3: Shipping & Complimentary Services -->
+<div class="bg-surface-container-low overflow-hidden">
+<button aria-expanded="false" class="w-full p-4 flex items-center justify-between text-left focus:outline-none" onclick="toggleAccordion('acc-3', 'icon-3')">
+<span class="font-headline-sm text-headline-sm text-luxury-black">Complimentary Shipping &amp; Returns</span>
+<span class="material-symbols-outlined text-luxury-black transition-transform duration-300" id="icon-3">expand_more</span>
+</button>
+<div class="hidden px-4 pb-5 pt-1 space-y-2 font-body-md text-body-md text-on-surface-variant" id="acc-3">
+<p class="">
+          Each order arrives packaged in the signature Maison matte ebony gift box with silk grosgrain ribbon. Delivered via climate-controlled express courier with signature verification.
+        </p>
+<p class="font-body-sm text-body-sm text-secondary">
+          Complimentary white-glove doorstep collections are available within 30 days of arrival.
+        </p>
+</div>
+</div>
+<!-- Accordion 4: Authenticity & Monogramming -->
+<div class="bg-surface-container-low overflow-hidden">
+<button aria-expanded="false" class="w-full p-4 flex items-center justify-between text-left focus:outline-none" onclick="toggleAccordion('acc-4', 'icon-4')">
+<span class="font-headline-sm text-headline-sm text-luxury-black">Certificate of Authenticity &amp; Monogram</span>
+<span class="material-symbols-outlined text-luxury-black transition-transform duration-300" id="icon-4">expand_more</span>
+</button>
+<div class="hidden px-4 pb-5 pt-1 space-y-2 font-body-md text-body-md text-on-surface-variant" id="acc-4">
+<p class="">
+          Accompanied by an embossed certificate bearing the craftsman's registration seal. Complimentary hot-foil monogramming (up to 3 characters in blind or 24k gold foil) is available upon request through our concierge.
+        </p>
+</div>
+</div>
+</div>
+<!-- Editorial Section: Complete The Look -->
+<div class="mt-12 px-margin">
+<div class="flex items-baseline justify-between mb-4">
+<div>
+<p class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-primary font-semibold">The Curated Ensemble</p>
+<h3 class="font-headline-md text-headline-md text-luxury-black font-normal">Complete The Look</h3>
+</div>
+<a class="font-label-caps-sm text-label-caps-sm uppercase tracking-wider text-secondary underline decoration-secondary/50 underline-offset-4 hover:text-luxury-black" href="#">View Lookbook</a>
+</div>
+<!-- Editorial Product Mosaic Stack -->
+<div class="flex flex-col gap-4">
+<!-- Item 1: Coat -->
+<div class="p-3 bg-surface-container-low flex items-center gap-4">
+<div class="w-24 aspect-[3/4] shrink-0 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Editorial look of the double face cashmere cocoon coat in oatmeal beige worn softly unbelted, showing rich wool fiber and minimalist silhouette on pure white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHURzYS2Io_Mi2Hr6A-I5IPb1Ey5Uoq_KCTkJfppy3IzdtAvz41o9CBKwfIZnv4HUCIcJWY8-8POSdOgKdGJimO8mnPY7SgFmN81CKVXbcmVqdTxT6BCuN6RFYQcOzMgT23m7cYYCejFfMbqpwKBZaHDgDkMkCF4yRlfnebrGhUPR-S3Jy0POPMi9MLdVPHXirVLohqB9agjClHJh-pemkBrBwyQkD83JvTcQFd7h1">
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-secondary">Outerwear Atelier</span>
+<h4 class="font-headline-sm text-headline-sm text-luxury-black truncate pt-0.5">The Double-Face Cashmere Cocoon Coat</h4>
+<p class="font-body-md text-body-md text-luxury-black pt-1">$4,200</p>
+<button class="mt-2 text-primary hover:text-accessible-orange font-label-caps-sm text-label-caps-sm uppercase tracking-wider font-semibold flex items-center gap-1" onclick="triggerQuickAdd('Cashmere Cocoon Coat')">
+<span class="">+ Quick Add</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Architectural Mule -->
+<div class="p-3 bg-surface-container-low flex items-center gap-4">
+<div class="w-24 aspect-[3/4] shrink-0 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Sculptural leather mule shoe in obsidian black leather with chiseled heel detail resting cleanly on architectural travertine pedestal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnMXg9l0INH7iBKUMmU6rPtXqFBo4VQRortNzJT6GwRLxMmui-P4dJ-i8ICn8fG9b7Q9Qwrh_VOtYad_u17W4qvUZQltGxnNz3IfrZRWduLaIT_s_WDCiEDxmqMnDiEvzBbozHbtvkqoC4lnVNlRi781niQ_0x1fBPCCzKz20_GlNan1aQGM7lQq1Pnnsz6Zv5BtH9u9EIaRRuxX6Wk19YJqpHtPVR8GE-P3q-CwzY">
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-secondary">Footwear</span>
+<h4 class="font-headline-sm text-headline-sm text-luxury-black truncate pt-0.5">The Chiseled Architectural Leather Mule</h4>
+<p class="font-body-md text-body-md text-luxury-black pt-1">$1,180</p>
+<button class="mt-2 text-primary hover:text-accessible-orange font-label-caps-sm text-label-caps-sm uppercase tracking-wider font-semibold flex items-center gap-1" onclick="triggerQuickAdd('Architectural Leather Mule')">
+<span class="">+ Quick Add</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Fluted Gold Cuff -->
+<div class="p-3 bg-surface-container-low flex items-center gap-4">
+<div class="w-24 aspect-[3/4] shrink-0 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Editorial macro still life of the column fluted 18k gold vermeil cuff bracelet catching radiant high key luxury studio light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgPeWr1rAnsjWoIBZhIagAvbTZCdkQoPg4gs2vIJlGbJiGVyir3K1fXuwqZQiGkMurz88z5VqZmyVIg4jRshFt27LgLWo7YwtbZn6aH1-PqebD-1VzC-Mdk2J2x-DzpGh2zYXfSLXmSiZ_iI8SkVKn_Y7Rvkw0xo3T0x7_93Q6TeWOxWiwGBXik25NQNrkYl0HPhfmjwYVe513ePz1w0ICdwIkhS3uTBVjKmD9Kl2_">
+</div>
+<div class="flex-1 min-w-0">
+<span class="font-label-caps-sm text-label-caps-sm uppercase text-secondary">Fine Bijoux</span>
+<h4 class="font-headline-sm text-headline-sm text-luxury-black truncate pt-0.5">The Column Fluted Gold Cuff</h4>
+<p class="font-body-md text-body-md text-luxury-black pt-1">$890</p>
+<button class="mt-2 text-primary hover:text-accessible-orange font-label-caps-sm text-label-caps-sm uppercase tracking-wider font-semibold flex items-center gap-1" onclick="triggerQuickAdd('Fluted Gold Cuff')">
+<span class="">+ Quick Add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Editorial Section: Archive Recommendations -->
+<div class="mt-12 px-margin">
+<div class="flex items-baseline justify-between mb-4">
+<div>
+<p class="font-label-caps-sm text-label-caps-sm uppercase tracking-widest text-secondary font-semibold">From The Permanent Archive</p>
+<h3 class="font-headline-md text-headline-md text-luxury-black font-normal">You May Also Admire</h3>
+</div>
+</div>
+<!-- 2-Column Mobile Grid for Recommendations -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Item A -->
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="The Arc Pleated Shoulder Bag in ivory smooth calfskin, folded sculptural leather detailing under soft ambient light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc4oOjfmFX6TgMo_gxbVVZu33nPzl9jwFduoqM597fdeM8Tim1_ZzwwtrEK8vrzjw030UftLTIs_JWXmCX3lV8SrEkh1C9UiRYvkqneS4eOH6ij3IzbwXbbiOojGhPKsg4g9PKMfFaqHZtqCmG6wWZGBaJZ5t-tiewC_2bJ_BtMPRQ14AKwP0BkxCYkXr_7ttmed1inSt5WO_yNZONSak9JDIOBgVGNpwHwJSJaYKs">
+</div>
+<div>
+<p class="font-label-caps-sm text-label-caps-sm uppercase text-secondary">CYOF Archive</p>
+<p class="font-body-md text-body-md text-luxury-black font-medium truncate">The Arc Pleated Bag</p>
+<p class="font-body-md text-body-md text-luxury-black pt-0.5">$2,890</p>
+</div>
+</div>
+<!-- Item B -->
+<div class="group flex flex-col gap-2 cursor-pointer">
+<div class="aspect-[3/4] bg-surface-container overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="The Brera Structure Bucket Bag in raw saddle tan full grain leather standing upright on modern museum plinth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZaGr47ElDVWsGICV_ihyBcGwWq2EozEH3w3-knZG2fklfMl2YtOOW33n_XIpQrKlqAFRNdR6hqqf61xT35INk30YkP1g9NW12LxHpu9Qd1QUhZxFXMRxk3TMqPscsoJw2pin7uQJadmiO35aMmpARi9AKBvLL8ZfFXAXHuoMoUwEPMLgyKAJyubUAwMmMjxo5UBWEA0LWLDFsAzeUEjcgHAU4yLkl51W7MKKTSdQk">
+</div>
+<div>
+<p class="font-label-caps-sm text-label-caps-sm uppercase text-secondary">CYOF Archive</p>
+<p class="font-body-md text-body-md text-luxury-black font-medium truncate">The Brera Structure Bucket</p>
+<p class="font-body-md text-body-md text-luxury-black pt-0.5">$3,100</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Mobile Bottom Add to Bag Bar -->
+<aside class="fixed bottom-0 inset-x-0 z-40 bg-surface/95 backdrop-blur-xl shadow-[0_-4px_16px_rgba(0,0,0,0.06)] pb-safe">
+<div class="p-margin flex flex-col gap-2 max-w-md mx-auto">
+<button class="w-full h-14 bg-accessible-orange text-on-primary font-label-caps-lg text-label-caps-lg uppercase tracking-widest flex items-center justify-between px-6 shadow-md hover:bg-primary active:scale-[0.98] transition-all" id="add-to-bag-cta" onclick="handleAddToBag()">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+<span id="bag-button-text" class="">Add to Shopping Bag</span>
+</div>
+<span class="font-semibold text-pure-white">$3,450</span>
+</button>
+<!-- Trust Assurance Footnote -->
+<div class="flex items-center justify-center gap-4 text-secondary font-label-caps-sm text-[10px] tracking-wider uppercase">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-accessible-orange">lock</span>
+          Encrypted Checkout
+        </span>
+<span class="">•</span>
+<span class="">Complimentary Insurance</span>
+<span class="">•</span>
+<span class="">Atelier Certified</span>
+</div>
+</div>
+</aside>
+<!-- Interactive Toast Notification Element -->
+<div class="fixed top-20 inset-x-margin z-50 pointer-events-none transform -translate-y-8 opacity-0 transition-all duration-300 flex items-center justify-center" id="luxury-toast">
+<div class="bg-luxury-black text-pure-white px-5 py-3 shadow-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed-dim">verified</span>
+<span class="font-label-md text-label-md" id="toast-message">Item added to your shopping bag</span>
+</div>
+</div>
+</div>
+<script>
+  // Carousel Tracking & Dot Synchronization
+  const track = document.getElementById('carousel-track');
+  const counter = document.getElementById('carousel-counter');
+  const dots = document.querySelectorAll('.carousel-dot');
+
+  if (track) {
+    track.addEventListener('scroll', () => {
+      const scrollPos = track.scrollLeft;
+      const slideWidth = track.offsetWidth;
+      const activeIndex = Math.round(scrollPos / slideWidth);
+      const displayIndex = (activeIndex + 1).toString().padStart(2, '0');
+      
+      if (counter) counter.textContent = `${displayIndex} / 05`;
+      
+      dots.forEach((dot, index) => {
+        if (index === activeIndex) {
+          dot.classList.remove('bg-surface-dim');
+          dot.classList.add('bg-luxury-black', 'w-3');
+        } else {
+          dot.classList.remove('bg-luxury-black', 'w-3');
+          dot.classList.add('bg-surface-dim', 'w-1.5');
+        }
+      });
+    });
+  }
+
+  // Wishlist Heart Toggle
+  let isWishlisted = false;
+  function toggleWishlist() {
+    isWishlisted = !isWishlisted;
+    const icon = document.getElementById('wishlist-icon');
+    if (isWishlisted) {
+      icon.textContent = 'favorite';
+      icon.classList.add('text-primary');
+      icon.style.fontVariationSettings = "'FILL' 1";
+      showToast('Preserved to your private wishlist');
+    } else {
+      icon.textContent = 'favorite_border';
+      icon.classList.remove('text-primary');
+      icon.style.fontVariationSettings = "'FILL' 0";
+      showToast('Removed from wishlist');
+    }
+  }
+
+  // Shade Selection
+  function selectShade(button, shadeName) {
+    document.querySelectorAll('.shade-swatch').forEach(btn => {
+      btn.classList.remove('ring-1', 'ring-luxury-black');
+      btn.classList.add('ring-0', 'opacity-85');
+    });
+    button.classList.add('ring-1', 'ring-luxury-black');
+    button.classList.remove('ring-0', 'opacity-85');
+    document.getElementById('selected-shade-name').textContent = shadeName;
+  }
+
+  // Size Selection
+  function selectSize(button, sizeName, dimensions) {
+    document.querySelectorAll('.size-pill').forEach(btn => {
+      btn.className = 'size-pill p-3 text-left bg-surface-container-low hover:bg-surface-container active:scale-[0.98] transition-all';
+      const label = btn.querySelector('.font-label-md');
+      const sub = btn.querySelector('.font-body-sm');
+      if (label) label.className = 'font-label-md text-label-md text-luxury-black font-semibold';
+      if (sub) sub.className = 'font-body-sm text-body-sm text-secondary pt-0.5';
+    });
+
+    button.className = 'size-pill p-3 text-left bg-luxury-black text-pure-white shadow-sm active:scale-[0.98] transition-all';
+    const activeLabel = button.querySelector('.font-label-md');
+    const activeSub = button.querySelector('.font-body-sm');
+    if (activeLabel) activeLabel.className = 'font-label-md text-label-md text-pure-white font-semibold';
+    if (activeSub) activeSub.className = 'font-body-sm text-body-sm text-surface-variant pt-0.5';
+    showToast(`Scale selected: ${sizeName} (${dimensions})`);
+  }
+
+  // Accordion Toggle
+  function toggleAccordion(contentId, iconId) {
+    const content = document.getElementById(contentId);
+    const icon = document.getElementById(iconId);
+    if (!content || !icon) return;
+
+    if (content.classList.contains('hidden')) {
+      content.classList.remove('hidden');
+      icon.classList.add('rotate-180');
+    } else {
+      content.classList.add('hidden');
+      icon.classList.remove('rotate-180');
+    }
+  }
+
+  // Size Guide Drawer Toggle
+  function toggleSizeGuide() {
+    const drawer = document.getElementById('size-guide-drawer');
+    if (drawer) {
+      drawer.classList.toggle('hidden');
+    }
+  }
+
+  // Add to Bag Microinteraction
+  function handleAddToBag() {
+    const cta = document.getElementById('add-to-bag-cta');
+    const textSpan = document.getElementById('bag-button-text');
+    if (!cta || !textSpan) return;
+
+    // Tactile feedback
+    if (navigator.vibrate) {
+      navigator.vibrate(30);
+    }
+
+    textSpan.textContent = 'Allocating Atelier Piece...';
+    cta.classList.add('opacity-90');
+
+    setTimeout(() => {
+      textSpan.textContent = 'Added to Shopping Bag';
+      showToast('Palazzo Tote added to your Maison Bag');
+      setTimeout(() => {
+        textSpan.textContent = 'Add to Shopping Bag';
+        cta.classList.remove('opacity-90');
+      }, 2000);
+    }, 600);
+  }
+
+  // Quick Add for Cross-Sells
+  function triggerQuickAdd(itemName) {
+    showToast(`${itemName} added to private curation`);
+  }
+
+  function triggerConciergeToast(msg) {
+    showToast(msg);
+  }
+
+  function openSalonModal() {
+    showToast('Reserve request routed to Milan Flagship Via Montenapoleone');
+  }
+
+  // Toast System
+  let toastTimer = null;
+  function showToast(message) {
+    const toast = document.getElementById('luxury-toast');
+    const msgEl = document.getElementById('toast-message');
+    if (!toast || !msgEl) return;
+
+    msgEl.textContent = message;
+    toast.classList.remove('-translate-y-8', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('-translate-y-8', 'opacity-0');
+    }, 2800);
+  }
+</script></main>
+
+
+
+</body></html>

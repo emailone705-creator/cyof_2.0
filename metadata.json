@@ -1,0 +1,6 @@
+{
+  "name": "CYOF — Luxury Haute Couture",
+  "description": "CYOF (#CraftedYourOwnFashion) — Premium luxury fashion e-commerce platform specializing in distinctive, fashionable, hand-painted clothing and accessories.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
