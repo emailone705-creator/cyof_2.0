@@ -69,18 +69,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('account-orders')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
-                  Shipping & Handover
-                </button>
-              </li>
-              <li>
                 <button onClick={() => onNavigate('account-returns')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
-                  Returns & Exchanges
+                  Returns & Exchanges?
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('account')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   Craftsmanship Appointment
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('faq')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                  FAQ
                 </button>
               </li>
             </ul>
@@ -89,6 +89,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3 text-[#111111]">ABOUT CYOF</h4>
             <ul className="space-y-2 text-[11px] text-[#57534E]">
+              <li>
+                <button onClick={() => onNavigate('journal')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                  About Us
+                </button>
+              </li>
               <li>
                 <button onClick={() => onNavigate('journal')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   The Atelier Provenance
@@ -126,6 +131,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
+                <button onClick={() => onNavigate('account-orders')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                  Returns & Exchanges Policy
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('account-orders')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                  Shipping & Handover Policy
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onNavigate('account-support')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   Cookie Settings
                 </button>
@@ -147,7 +162,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-[#888888] uppercase tracking-widest">
           <p>© CYOF BISWAJAL PRIVATE LIMITED • <strong className="text-[#D34500]">#CraftedYourOwnFashion</strong></p>
 
-          <p>PROVENANCE REGISTERED</p>
+          <p>PROVENANCE REGISTERED 2026</p>
         </div>
       </footer>
     </div>

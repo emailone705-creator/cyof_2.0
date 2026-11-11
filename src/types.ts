@@ -57,4 +57,5 @@ export type ViewRoute =
   | 'account-support'
   | 'terms-conditions'
   | 'privacy-policy'
+  | 'faq'
   | 'order-confirmed';

@@ -926,21 +926,11 @@ export const PrivacyPolicyView: React.FC<PrivacyPolicyViewProps> = ({ onNavigate
           </p>
         </div>
 
-        {/* Closing Note */}
-        <div className="border-t border-[#E9DFD2] pt-6 text-center">
-          <p className="font-['EB_Garamond'] text-xl sm:text-2xl text-[#111111] italic">
-            Integrity, Discretion & Bespoke Excellence.
-          </p>
-          <p className="font-['Manrope'] text-[10px] uppercase tracking-[0.25em] text-[#B94700] mt-2">
-            #CraftedYourOwnFashion
-          </p>
-        </div>
-
         {/* Bottom Navigation CTA */}
         <div className="pt-8 border-t border-[#D34500] flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={() => onNavigate('home')}
-            className="w-full sm:w-auto px-8 py-3.5 bg-[#111111] hover:bg-[#B94700] text-white font-['Manrope'] text-xs uppercase tracking-widest font-semibold transition-colors shadow-xs cursor-pointer"
+            className="w-full sm:w-auto px-8 py-3.5 bg-[#D34500] hover:bg-[#B94700] text-white font-['Manrope'] text-xs uppercase tracking-widest font-semibold transition-colors shadow-xs cursor-pointer"
           >
             Return to Flagship Boutique
           </button>
@@ -951,6 +941,16 @@ export const PrivacyPolicyView: React.FC<PrivacyPolicyViewProps> = ({ onNavigate
           >
             View Terms & Conditions →
           </button>
+        </div>
+
+        {/* Closing Note */}
+        <div className="border-t border-[#E9DFD2] pt-6 text-center">
+          <p className="font-['EB_Garamond'] text-xl sm:text-2xl text-[#111111] italic">
+            Integrity, Discretion & Bespoke Excellence.
+          </p>
+          <p className="font-['Manrope'] text-[10px] uppercase tracking-[0.25em] text-[#B94700] mt-2">
+            #CraftedYourOwnFashion
+          </p>
         </div>
 
       </main>

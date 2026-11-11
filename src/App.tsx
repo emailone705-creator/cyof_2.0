@@ -31,6 +31,7 @@ import { LoyaltyRewardsView } from './views/account/LoyaltyRewardsView';
 import { SupportView } from './views/account/SupportView';
 import { TermsConditionsView } from './views/TermsConditionsView';
 import { PrivacyPolicyView } from './views/PrivacyPolicyView';
+import { FaqView } from './views/FaqView';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<ViewRoute>('home');
@@ -319,6 +320,10 @@ export default function App() {
 
         {currentRoute === 'privacy-policy' && (
           <PrivacyPolicyView onNavigate={handleNavigate} />
+        )}
+
+        {currentRoute === 'faq' && (
+          <FaqView onNavigate={handleNavigate} />
         )}
       </main>
 

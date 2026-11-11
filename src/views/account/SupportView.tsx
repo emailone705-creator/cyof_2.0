@@ -11,8 +11,6 @@ export const SupportView: React.FC<SupportViewProps> = ({
   onNavigate,
   onOpenSalonModal,
 }) => {
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [searchQuery, setSearchQuery] = useState('');
   const [inquirySubject, setInquirySubject] = useState('');
   const [inquiryMessage, setInquiryMessage] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -28,39 +26,6 @@ export const SupportView: React.FC<SupportViewProps> = ({
     setInquirySubject('');
     setInquiryMessage('');
   };
-
-  const faqs = [
-    {
-      q: 'How does CYOF White-Glove Hand-Delivery operate across India?',
-      a: 'All CYOF creations are housed in custom cedar garment boxes and delivered by our private chauffeur fleet in Mumbai, New Delhi, and Bengaluru, and via secure armed air freight across all other Indian cities. Handover requires encrypted patron signature and OTP authorization.',
-    },
-    {
-      q: 'Can I request bespoke size adjustments or tailoring after delivery?',
-      a: 'Yes. Every CYOF acquisition includes complimentary lifetime atelier adjustments. You may request a salon fitting appointment or schedule our visiting master tailor to attend to you at your residence.',
-    },
-    {
-      q: 'What is the authenticity guarantee for CYOF hand-painted garments?',
-      a: 'Each piece is individually painted by our master artisans and inscribed with a unique serial number in our Mumbai central archive. A NFC-embedded physical Provenance Certificate accompanies every piece.',
-    },
-    {
-      q: 'What payment modes are accepted for luxury commissions?',
-      a: 'We accept Indian UPI (Google Pay, PhonePe, Paytm, BHIM), Indian NetBanking (HDFC, ICICI, SBI, Axis, Kotak), RuPay Infinite, Visa, MasterCard, and American Express in Indian Rupees (INR ₹). All transactions are encrypted and GST compliant.',
-    },
-    {
-      q: 'How do I arrange a private salon fitting rendezvous?',
-      a: 'You can tap the "Book Private Salon Fitting" button at the top of your Client Dossier to reserve private salon suites at The Oberoi (Mumbai), DLF Emporio (New Delhi), UB City (Bengaluru), or Taj Falaknuma Palace (Hyderabad).',
-    },
-    {
-      q: 'What is the care protocol for vegetable-tanned leather and hand-painted silk?',
-      a: 'Garments should be stored within the provided breathable cedar garment bags at controlled humidity. We provide complimentary annual conditioning and hand-paint preservation at our Kala Ghoda atelier.',
-    },
-  ];
-
-  const filteredFaqs = faqs.filter(
-    (f) =>
-      f.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.a.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="w-full flex flex-col bg-[#fcf9f4] min-h-screen text-[#1c1c19] py-8 sm:py-12 px-4 md:px-8 lg:px-12 max-w-[1500px] mx-auto">
@@ -197,65 +162,11 @@ export const SupportView: React.FC<SupportViewProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3.5 bg-[#111111] hover:bg-[#B94700] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer"
+                className="w-full py-3.5 bg-[#D34500] hover:bg-[#B94700] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer"
               >
                 Transmit to Private Client Desk
               </button>
             </form>
-          </div>
-
-          {/* Right Column: Searchable FAQs */}
-          <div className="lg:col-span-7 bg-white border border-[#E9DFD2] p-6 sm:p-8 shadow-xs space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E9DFD2] gap-3">
-              <div>
-                <span className="text-[10px] uppercase tracking-widest text-[#B94700] font-bold block">
-                  Knowledge Base
-                </span>
-                <h3 className="font-['EB_Garamond'] text-2xl text-[#111111]">
-                  Frequently Inquired Curations
-                </h3>
-              </div>
-
-              <div className="relative w-full sm:w-64">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search questions..."
-                  className="w-full bg-[#fcf9f4] border border-[#E9DFD2] pl-8 pr-3 py-2 text-xs text-[#111111] focus:outline-none focus:border-[#111111]"
-                />
-                <span className="material-symbols-outlined text-[16px] text-[#57534E] absolute left-2.5 top-2.5">
-                  search
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              {filteredFaqs.map((faq, idx) => {
-                const isOpen = openFaqIndex === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="border border-[#E9DFD2] bg-white overflow-hidden"
-                  >
-                    <button
-                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                      className="w-full p-4 text-left flex items-center justify-between text-xs sm:text-sm font-semibold text-[#111111] hover:text-[#B94700] cursor-pointer"
-                    >
-                      <span>{faq.q}</span>
-                      <span className="material-symbols-outlined text-[18px]">
-                        {isOpen ? 'expand_less' : 'expand_more'}
-                      </span>
-                    </button>
-                    {isOpen && (
-                      <div className="px-4 pb-4 pt-1 text-xs text-[#57534E] leading-relaxed border-t border-[#f0ede9]">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       </div>
