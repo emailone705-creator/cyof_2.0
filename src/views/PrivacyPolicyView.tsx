@@ -53,16 +53,6 @@ export const PrivacyPolicyView: React.FC<PrivacyPolicyViewProps> = ({ onNavigate
         </div>
       </header>
 
-
-
-
-
-
-
-
-
-
-
       {/* Legal Content Body */}
       <main className="w-full max-w-[1000px] mx-auto px-4 md:px-8 py-10 md:py-14 space-y-12">
 
