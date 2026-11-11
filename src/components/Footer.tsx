@@ -131,7 +131,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('account-orders')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                <button onClick={() => onNavigate('returns-exchanges-policy')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   Returns & Exchanges Policy
                 </button>
               </li>

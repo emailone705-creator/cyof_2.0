@@ -32,6 +32,7 @@ import { SupportView } from './views/account/SupportView';
 import { TermsConditionsView } from './views/TermsConditionsView';
 import { PrivacyPolicyView } from './views/PrivacyPolicyView';
 import { FaqView } from './views/FaqView';
+import { ReturnsExchangesPolicyView } from './views/ReturnsExchangesPolicyView';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<ViewRoute>('home');
@@ -320,6 +321,10 @@ export default function App() {
 
         {currentRoute === 'privacy-policy' && (
           <PrivacyPolicyView onNavigate={handleNavigate} />
+        )}
+
+        {currentRoute === 'returns-exchanges-policy' && (
+          <ReturnsExchangesPolicyView onNavigate={handleNavigate} />
         )}
 
         {currentRoute === 'faq' && (
