@@ -8,6 +8,7 @@ interface HeaderProps {
   wishlistCount: number;
   onOpenSearch: () => void;
   onOpenWishlist: () => void;
+  onOpenCart?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   wishlistCount,
   onOpenSearch,
   onOpenWishlist,
+  onOpenCart,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -106,7 +108,13 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 aria-label="Shopping Bag"
-                onClick={() => onNavigate('cart')}
+                onClick={() => {
+                  if (onOpenCart) {
+                    onOpenCart();
+                  } else {
+                    onNavigate('cart');
+                  }
+                }}
                 className="relative h-11 min-h-[44px] px-2 flex items-center justify-center text-[#111111] hover:text-[#B94700] transition-colors cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[20px]">shopping_bag</span>

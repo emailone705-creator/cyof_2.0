@@ -8,7 +8,6 @@ import { ViewRoute, Product, CartItem, Article } from './types';
 import { PRODUCTS, ARTICLES } from './data/mockData';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { MobileBottomNav } from './components/MobileBottomNav';
 import { SearchModal } from './components/SearchModal';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { SalonModal } from './components/SalonModal';
@@ -16,6 +15,7 @@ import { HomeView } from './views/HomeView';
 import { ShopView } from './views/ShopView';
 import { ProductDetailView } from './views/ProductDetailView';
 import { CartView } from './views/CartView';
+import { CartSheetDrawer } from './components/CartSheetDrawer';
 import { CheckoutView } from './views/CheckoutView';
 import { JournalView } from './views/JournalView';
 import { ArticleDetailView } from './views/ArticleDetailView';
@@ -29,6 +29,8 @@ import { WishlistView } from './views/account/WishlistView';
 import { ReturnsView } from './views/account/ReturnsView';
 import { LoyaltyRewardsView } from './views/account/LoyaltyRewardsView';
 import { SupportView } from './views/account/SupportView';
+import { TermsConditionsView } from './views/TermsConditionsView';
+import { PrivacyPolicyView } from './views/PrivacyPolicyView';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<ViewRoute>('home');
@@ -58,6 +60,7 @@ export default function App() {
   // Modals & Drawers
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [wishlistDrawerOpen, setWishlistDrawerOpen] = useState(false);
+  const [cartSheetOpen, setCartSheetOpen] = useState(false);
   const [salonModalOpen, setSalonModalOpen] = useState(false);
   const [salonProductName, setSalonProductName] = useState<string | undefined>(undefined);
 
@@ -108,6 +111,7 @@ export default function App() {
       return [...prev, { product, quantity: 1, selectedShade: shade, selectedSize: size }];
     });
     showToast(`Allocated "${product.name}" to your CYOF bag`);
+    setCartSheetOpen(true);
   };
 
   const handleUpdateQuantity = (productId: string, quantity: number) => {
@@ -150,8 +154,8 @@ export default function App() {
       <div className="min-h-screen flex flex-col bg-[#F8F5F0] text-[#1c1c19] selection:bg-[#ffdbcd] selection:text-[#351000] antialiased">
       {/* Luxury Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-28 right-4 sm:right-8 z-50 transform transition-all duration-300 ease-out bg-[#111111] text-white px-5 py-3.5 shadow-2xl flex items-center gap-3 border border-[#E9DFD2] animate-in slide-in-from-top-4">
-          <span className="material-symbols-outlined text-[18px] text-[#ffb595]">verified</span>
+        <div className="fixed top-28 right-4 sm:right-8 z-50 transform transition-all duration-300 ease-out bg-[#FFFFFF] text-[#111111] px-5 py-3.5 shadow-2xl flex items-center gap-3 border border-[#E9DFD2] animate-in slide-in-from-top-4">
+          <span className="material-symbols-outlined text-[18px] text-[#B94700]">verified</span>
           <span className="font-['Manrope'] text-xs font-medium tracking-wide">{toastMessage}</span>
         </div>
       )}
@@ -164,6 +168,7 @@ export default function App() {
         wishlistCount={wishlist.length}
         onOpenSearch={() => setSearchModalOpen(true)}
         onOpenWishlist={() => setWishlistDrawerOpen(true)}
+        onOpenCart={() => setCartSheetOpen(true)}
       />
 
       {/* Main View Router */}
@@ -307,17 +312,18 @@ export default function App() {
             onOpenSalonModal={handleOpenSalonModal}
           />
         )}
+
+        {currentRoute === 'terms-conditions' && (
+          <TermsConditionsView onNavigate={handleNavigate} />
+        )}
+
+        {currentRoute === 'privacy-policy' && (
+          <PrivacyPolicyView onNavigate={handleNavigate} />
+        )}
       </main>
 
       {/* Global Footer */}
       <Footer onNavigate={handleNavigate} />
-
-      {/* Mobile Fixed Bottom App Bar */}
-      <MobileBottomNav
-        currentRoute={currentRoute}
-        onNavigate={handleNavigate}
-        wishlistCount={wishlist.length}
-      />
 
       {/* Interactive Global Modals */}
       <SearchModal
@@ -343,6 +349,14 @@ export default function App() {
         isOpen={salonModalOpen}
         onClose={() => setSalonModalOpen(false)}
         productName={salonProductName}
+      />
+
+      <CartSheetDrawer
+        isOpen={cartSheetOpen}
+        onClose={() => setCartSheetOpen(false)}
+        cart={cart}
+        onRemoveItem={handleRemoveFromCart}
+        onNavigate={handleNavigate}
       />
       </div>
     </PatronProvider>

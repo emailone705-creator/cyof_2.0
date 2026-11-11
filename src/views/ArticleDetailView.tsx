@@ -812,7 +812,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
       </section>
 
       {/* Mobile Sticky Bottom Reading Utility Bar */}
-      <div className="lg:hidden fixed bottom-16 left-0 right-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md pb-safe border-t border-[#E9DFD2]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md pb-safe border-t border-[#E9DFD2]">
         <div className="w-full h-1 bg-[#E9DFD2]">
           <div className="h-full bg-[#B94700] transition-all duration-150" style={{ width: `${readProgress}%` }} />
         </div>

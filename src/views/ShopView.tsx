@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Product, ViewRoute } from '../types';
 import { PRODUCTS } from '../data/mockData';
 
@@ -11,6 +11,213 @@ interface ShopViewProps {
   onNavigate: (route: ViewRoute) => void;
 }
 
+interface ShopProductCardProps {
+  product: Product;
+  saved: boolean;
+  onSelectProduct: (product: Product) => void;
+  onAddToCart: (product: Product) => void;
+  onToggleWishlist: (product: Product) => void;
+}
+
+const ShopProductCard: React.FC<ShopProductCardProps> = ({
+  product,
+  saved,
+  onSelectProduct,
+  onAddToCart,
+  onToggleWishlist,
+}) => {
+  const [activeImgIndex, setActiveImgIndex] = useState(0);
+
+  // Determine primary & secondary images for slide thumbnail
+  const productImages = product.images && product.images.length > 1
+    ? product.images.slice(0, 2)
+    : [product.image, product.images?.[1] || product.image];
+
+  const badgeText = product.badges && product.badges.length > 0 ? product.badges[0] : 'NEW IN';
+
+  // Touch swipe gesture handlers for image sliding
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const deltaX = touchStartX.current - touchEndX.current;
+    if (deltaX > 30) {
+      // Swiped left -> show 2nd image
+      setActiveImgIndex(1);
+    } else if (deltaX < -30) {
+      // Swiped right -> show 1st image
+      setActiveImgIndex(0);
+    }
+  };
+
+  // PC Cursor drag & hover movement handlers
+  const isMouseDownRef = useRef(false);
+  const mouseDownXRef = useRef(0);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    isMouseDownRef.current = true;
+    mouseDownXRef.current = e.clientX;
+  };
+
+  const handleMouseUp = () => {
+    isMouseDownRef.current = false;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+
+    if (isMouseDownRef.current) {
+      const dragDelta = mouseDownXRef.current - e.clientX;
+      if (dragDelta > 15) {
+        setActiveImgIndex(1);
+      } else if (dragDelta < -15) {
+        setActiveImgIndex(0);
+      }
+    } else {
+      if (x > rect.width * 0.5) {
+        setActiveImgIndex(1);
+      } else {
+        setActiveImgIndex(0);
+      }
+    }
+  };
+
+  const handleMouseLeave = () => {
+    isMouseDownRef.current = false;
+    // Keep 2nd image persistent when mouse leaves until user drags cursor again
+  };
+
+  return (
+    <article className="flex flex-col group">
+      {/* 3:4 Aspect Ratio Product Image Container */}
+      <div
+        className="relative w-full aspect-[3/4] bg-[#f4f2ee] overflow-hidden mb-3 select-none cursor-pointer"
+        onClick={() => onSelectProduct(product)}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Top Badge (Upper Left) */}
+        <span className="absolute top-3 left-3 font-['Manrope'] text-[9px] uppercase tracking-[0.2em] text-[#57534E] font-medium z-10 pointer-events-none">
+          {badgeText}
+        </span>
+
+        {/* Wishlist Heart Icon (Upper Right) */}
+        <button
+          type="button"
+          aria-label="Save to Wishlist"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleWishlist(product);
+          }}
+          className="absolute top-2.5 right-2.5 p-1 bg-transparent text-[#111111] hover:text-[#B94700] transition-colors cursor-pointer z-10"
+        >
+          <span className={`material-symbols-outlined text-[20px] ${saved ? 'text-[#B94700]' : ''}`}>
+            {saved ? 'favorite' : 'favorite_border'}
+          </span>
+        </button>
+
+        {/* Sliding 2-Image Track */}
+        <div
+          className="w-full h-full flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${activeImgIndex * 100}%)` }}
+        >
+          <img
+            src={productImages[0]}
+            alt={`${product.name} view 1`}
+            className="w-full h-full object-cover shrink-0"
+          />
+          <img
+            src={productImages[1]}
+            alt={`${product.name} view 2`}
+            className="w-full h-full object-cover shrink-0"
+          />
+        </div>
+
+        {/* Interactive Horizontal Line / Dash Indicators (Segment 1 & Segment 2) */}
+        <div className="absolute bottom-3 inset-x-0 flex justify-center items-center gap-1.5 z-10">
+          <button
+            type="button"
+            aria-label="View primary image"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveImgIndex(0);
+            }}
+            className={`h-[2.5px] transition-all duration-300 rounded-full cursor-pointer ${
+              activeImgIndex === 0 ? 'w-6 bg-[#111111]' : 'w-4 bg-[#111111]/30 hover:bg-[#111111]/60'
+            }`}
+          />
+          <button
+            type="button"
+            aria-label="View secondary image"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveImgIndex(1);
+            }}
+            className={`h-[2.5px] transition-all duration-300 rounded-full cursor-pointer ${
+              activeImgIndex === 1 ? 'w-6 bg-[#111111]' : 'w-4 bg-[#111111]/30 hover:bg-[#111111]/60'
+            }`}
+          />
+        </div>
+      </div>
+
+      {/* Product Title & Shopping Bag Icon Row */}
+      <div className="flex items-start justify-between gap-2">
+        <h2
+          onClick={() => onSelectProduct(product)}
+          className="font-['EB_Garamond'] text-base sm:text-lg text-[#111111] font-normal leading-tight hover:text-[#B94700] transition-colors cursor-pointer line-clamp-2"
+        >
+          {product.name}
+        </h2>
+
+        <button
+          type="button"
+          aria-label="Add to bag"
+          onClick={() => onAddToCart(product)}
+          className="text-[#111111] hover:text-[#B94700] transition-colors p-0.5 cursor-pointer shrink-0 mt-0.5"
+        >
+          <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+        </button>
+      </div>
+
+      {/* Price Display */}
+      <div className="mt-1">
+        <span className="font-['EB_Garamond'] text-sm sm:text-base text-[#111111] font-normal">
+          ₹ {product.price.toLocaleString('en-IN')}
+        </span>
+      </div>
+
+      {/* Color Swatches Below Price */}
+      {product.shades && product.shades.length > 0 && (
+        <div className="flex items-center gap-1.5 mt-2">
+          {product.shades.map((shade) => (
+            <span
+              key={shade.name}
+              className="w-3 h-3 rounded-full border border-black/20"
+              style={{ backgroundColor: shade.color }}
+              title={shade.name}
+            />
+          ))}
+        </div>
+      )}
+    </article>
+  );
+};
+
 export const ShopView: React.FC<ShopViewProps> = ({
   initialCategory = 'All Creations',
   onSelectProduct,
@@ -20,20 +227,12 @@ export const ShopView: React.FC<ShopViewProps> = ({
   onNavigate,
 }) => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [sortBy, setSortBy] = useState('Curated');
-  const [priceCeiling, setPriceCeiling] = useState(400000);
+  const [priceCeiling, setPriceCeiling] = useState(600000);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-
-  const categories = [
-    { name: 'All Creations', count: 48 },
-    { name: 'Outerwear', count: 14 },
-    { name: 'Tailoring', count: 10 },
-    { name: 'Silk Dresses', count: 8 },
-    { name: 'Leather Goods', count: 11 },
-    { name: 'Footwear', count: 5 },
-  ];
+  const [visibleCount, setVisibleCount] = useState(12);
 
   const colors = [
     { label: 'Noir', hex: '#111111' },
@@ -46,8 +245,14 @@ export const ShopView: React.FC<ShopViewProps> = ({
 
   const sizes = ['IT 36', 'IT 38', 'IT 40', 'IT 42', 'IT 44', 'IT 46'];
 
+  // Expanded product list for multi-page grid feel matching the screenshot
+  const displayProducts = [...PRODUCTS, ...PRODUCTS, ...PRODUCTS].map((p, idx) => ({
+    ...p,
+    id: `${p.id}-grid-${idx}`,
+  }));
+
   // Filter products
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = displayProducts.filter((p) => {
     if (activeCategory !== 'All Creations' && p.category !== activeCategory) {
       if (activeCategory === 'Women' || activeCategory === 'New Arrivals') return true;
       return false;
@@ -56,457 +261,160 @@ export const ShopView: React.FC<ShopViewProps> = ({
     return true;
   });
 
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
+
   return (
-    <div className="w-full flex flex-col bg-[#fcf9f4] min-h-screen">
-      {/* Category Header Section */}
-      <section className="w-full px-4 md:px-8 lg:px-16 pt-8 pb-6 border-b border-[#E9DFD2]">
-        <div className="max-w-[1600px] mx-auto">
-          {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" class-name="breadcrumb" className="flex items-center gap-2 text-xs text-[#57534E] mb-4 font-['Manrope']">
-            <button onClick={() => onNavigate('home')} className="uppercase tracking-widest hover:text-[#111111] transition-colors cursor-pointer">
-              HOME
-            </button>
-            <span className="text-[#E9DFD2]">/</span>
-            <span className="uppercase tracking-widest hover:text-[#111111] cursor-pointer">WOMEN</span>
-            <span className="text-[#E9DFD2]">/</span>
-            <span className="uppercase tracking-widest text-[#111111] font-semibold">AUTUMN / WINTER 2026</span>
-          </nav>
+    <div className="w-full flex flex-col bg-[#ffffff] min-h-screen text-[#111111] font-['EB_Garamond']">
+      
+      {/* 1. Centered Editorial Category Header */}
+      <section className="w-full pt-10 pb-6 px-4 md:px-8 max-w-[1400px] mx-auto text-center">
+        <h1 className="font-['EB_Garamond'] text-2xl sm:text-3xl md:text-4xl text-[#111111] uppercase tracking-[0.15em] font-normal mb-3">
+          WOMEN'S NEW ARRIVALS
+        </h1>
+        <p className="font-['EB_Garamond'] text-sm sm:text-base text-[#57534E] max-w-2xl mx-auto leading-relaxed">
+          Women's new arrivals including{' '}
+          <button onClick={() => setActiveCategory('Women')} className="underline underline-offset-2 hover:text-[#B94700]">
+            clothing
+          </button>
+          ,{' '}
+          <button onClick={() => setActiveCategory('Footwear')} className="underline underline-offset-2 hover:text-[#B94700]">
+            shoes
+          </button>
+          ,{' '}
+          <button onClick={() => setActiveCategory('Leather Goods')} className="underline underline-offset-2 hover:text-[#B94700]">
+            bags
+          </button>
+          , and{' '}
+          <button onClick={() => setActiveCategory('All Creations')} className="underline underline-offset-2 hover:text-[#B94700]">
+            accessories
+          </button>{' '}
+          from the latest collection.
+        </p>
+      </section>
 
-          <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 mb-6">
-            <div>
-              <h1 className="font-['EB_Garamond'] text-4xl sm:text-5xl lg:text-6xl text-[#111111] tracking-tight font-normal">
-                Autumn <span className="italic font-light text-[#9e3d00]">/</span> Winter 2026
-              </h1>
-              <p className="font-['Manrope'] text-xs sm:text-sm text-[#57534E] mt-2 max-w-xl leading-relaxed">
-                Architectural silhouettes, brushed double-faced cashmere, and sculptural calfskin bags crafted in our Florence atelier. #CraftedYourOwnFashion
-              </p>
-            </div>
-            <div className="flex items-center gap-2 font-['Manrope'] text-xs uppercase tracking-widest text-[#57534E]">
-              <span>CATALOG:</span>
-              <span className="font-bold text-[#111111]">{filteredProducts.length} CREATIONS</span>
-            </div>
-          </div>
+      {/* 2. Top Filter Bar (Count Left, FILTERS Button Right) */}
+      <section className="w-full border-t border-b border-[#E9DFD2]/70 py-3.5 px-4 md:px-8 max-w-[1400px] mx-auto">
+        <div className="flex items-center justify-between">
+          <span className="font-['EB_Garamond'] text-base sm:text-lg text-[#111111] font-normal">
+            {filteredProducts.length} Products
+          </span>
 
-          {/* Horizontal Category Rail */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 -mx-4 px-4 md:-mx-8 md:px-8 lg:mx-0 lg:px-0">
-            {categories.map((cat) => {
-              const active = activeCategory === cat.name;
-              return (
-                <button
-                  key={cat.name}
-                  onClick={() => setActiveCategory(cat.name)}
-                  className={`whitespace-nowrap px-4 py-2 font-['Manrope'] text-[11px] uppercase tracking-wider transition-all cursor-pointer ${
-                    active
-                      ? 'bg-[#111111] text-white font-semibold shadow-sm'
-                      : 'bg-[#ebe8e3] text-[#111111] hover:bg-[#e5e2dd]'
-                  }`}
-                >
-                  {cat.name} ({cat.count})
-                </button>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            onClick={() => setFilterDrawerOpen(true)}
+            className="flex items-center gap-2 font-['Manrope'] text-xs uppercase tracking-[0.2em] font-semibold text-[#111111] hover:text-[#B94700] transition-colors cursor-pointer"
+          >
+            <span>FILTERS</span>
+            <span className="material-symbols-outlined text-[18px]">tune</span>
+          </button>
+        </div>
+      </section>
 
-          {/* Active Filter Chips */}
-          <div className="flex flex-wrap items-center gap-2 pt-4">
-            <span className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E] mr-1">
-              Active Filters:
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-[#111111] font-['Manrope'] text-[10px] uppercase tracking-wider border border-[#E9DFD2] shadow-xs">
-              Category: {activeCategory}
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-[#111111] font-['Manrope'] text-[10px] uppercase tracking-wider border border-[#E9DFD2] shadow-xs">
-              Price ≤ ₹{priceCeiling.toLocaleString('en-IN')}
-            </span>
-            {selectedColor && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-[#111111] font-['Manrope'] text-[10px] uppercase tracking-wider border border-[#E9DFD2] shadow-xs">
-                Color: {selectedColor}
-                <button onClick={() => setSelectedColor(null)} className="text-[#57534E] hover:text-[#B94700]">×</button>
-              </span>
-            )}
-            {selectedSize && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white text-[#111111] font-['Manrope'] text-[10px] uppercase tracking-wider border border-[#E9DFD2] shadow-xs">
-                Size: {selectedSize}
-                <button onClick={() => setSelectedSize(null)} className="text-[#57534E] hover:text-[#B94700]">×</button>
-              </span>
-            )}
+      {/* 3. Product Article Grid with 2-Image Slide Thumbnails */}
+      <section className="w-full px-2 sm:px-4 md:px-8 py-6 max-w-[1400px] mx-auto flex-1">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-10 sm:gap-y-14">
+          {visibleProducts.map((product) => {
+            const saved = isWishlisted(product.id);
+            return (
+              <ShopProductCard
+                key={product.id}
+                product={product}
+                saved={saved}
+                onSelectProduct={onSelectProduct}
+                onAddToCart={onAddToCart}
+                onToggleWishlist={onToggleWishlist}
+              />
+            );
+          })}
+        </div>
+
+        {/* 4. Bottom Load More Control & Counter */}
+        <div className="pt-16 pb-12 flex flex-col items-center justify-center text-center">
+          <p className="font-['EB_Garamond'] text-sm text-[#57534E] mb-4">
+            {visibleProducts.length}/{filteredProducts.length}
+          </p>
+
+          {visibleCount < filteredProducts.length && (
             <button
-              onClick={() => {
-                setActiveCategory('All Creations');
-                setPriceCeiling(500000);
-                setSelectedColor(null);
-                setSelectedSize(null);
-              }}
-              className="font-['Manrope'] text-[10px] text-[#B94700] uppercase underline tracking-wider ml-2 hover:text-[#111111] transition-colors cursor-pointer font-semibold"
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + 12)}
+              className="border border-[#111111] px-10 py-3.5 font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold text-[#111111] hover:bg-[#111111] hover:text-white transition-colors cursor-pointer"
             >
-              Reset All
+              SHOW 12 MORE
             </button>
-          </div>
+          )}
+
+          {/* Bottom Breadcrumb Bar */}
+          <nav aria-label="Breadcrumb" className="mt-16 pt-6 border-t border-[#E9DFD2]/60 w-full flex justify-center items-center gap-2 font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E]">
+            <button onClick={() => onNavigate('home')} className="hover:text-[#111111]">
+              HOMEPAGE
+            </button>
+            <span>|</span>
+            <button onClick={() => setActiveCategory('Women')} className="hover:text-[#111111]">
+              WOMEN
+            </button>
+            <span>|</span>
+            <span className="text-[#111111] font-bold">WOMEN'S NEW ARRIVALS</span>
+          </nav>
         </div>
       </section>
 
-      {/* Main Grid & Desktop Sticky Sidebar */}
-      <section className="w-full px-4 md:px-8 lg:px-16 py-8 pb-24 max-w-[1600px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Desktop Sidebar Filter (Sticky) */}
-          <aside className="hidden lg:block lg:col-span-3">
-            <div className="sticky top-28 space-y-6 p-6 bg-[#f6f3ee] border border-[#E9DFD2] shadow-sm">
-              <div className="flex items-center justify-between pb-3 border-b border-[#E9DFD2]">
-                <span className="font-['Manrope'] text-xs uppercase tracking-wider text-[#111111] font-bold">
-                  Refine Catalog
-                </span>
-                <button
-                  onClick={() => {
-                    setSortBy('Curated');
-                    setPriceCeiling(500000);
-                    setSelectedColor(null);
-                    setSelectedSize(null);
-                  }}
-                  className="font-['Manrope'] text-[10px] uppercase tracking-wider text-[#9e3d00] hover:underline cursor-pointer"
-                >
-                  Reset
-                </button>
-              </div>
-
-              {/* Sort Selector */}
-              <div className="space-y-2">
-                <label className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E] block font-semibold">
-                  Sort Sequence
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full bg-white border border-[#E9DFD2] py-2.5 px-3 font-['Manrope'] text-xs text-[#111111] focus:outline-none focus:border-[#111111] shadow-xs cursor-pointer"
-                >
-                  <option value="Curated">Curated Editorial</option>
-                  <option value="Newest">New Autumn Arrivals</option>
-                  <option value="HighLow">Price: High to Low</option>
-                  <option value="LowHigh">Price: Low to High</option>
-                </select>
-              </div>
-
-              {/* Atelier Color Swatches */}
-              <div className="space-y-2">
-                <span className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E] block font-semibold">
-                  Atelier Palette
-                </span>
-                <div className="grid grid-cols-6 gap-2 pt-1">
-                  {colors.map((c) => {
-                    const active = selectedColor === c.label;
-                    return (
-                      <button
-                        key={c.label}
-                        type="button"
-                        onClick={() => setSelectedColor(active ? null : c.label)}
-                        className={`w-7 h-7 border transition-all cursor-pointer ${
-                          active ? 'ring-2 ring-[#9e3d00] ring-offset-2' : 'border-[#E9DFD2] hover:scale-105'
-                        }`}
-                        style={{ backgroundColor: c.hex }}
-                        title={c.label}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Italian Sizing */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E] block font-semibold">
-                    Italian Sizing
-                  </span>
-                  <span className="font-['Manrope'] text-[9px] text-[#9e3d00] uppercase underline cursor-pointer">
-                    Guide
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-1.5 pt-1">
-                  {sizes.map((s) => {
-                    const active = selectedSize === s;
-                    return (
-                      <button
-                        key={s}
-                        type="button"
-                        onClick={() => setSelectedSize(active ? null : s)}
-                        className={`py-1.5 text-center font-['Manrope'] text-[10px] uppercase tracking-wider transition-all cursor-pointer ${
-                          active
-                            ? 'bg-[#111111] text-white font-bold'
-                            : 'bg-white hover:bg-[#E9DFD2] text-[#111111] border border-[#E9DFD2]'
-                        }`}
-                      >
-                        {s}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Price Scope Slider */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#57534E] font-semibold">
-                    Price Ceiling
-                  </span>
-                  <span className="font-['Manrope'] text-xs font-semibold text-[#111111]">
-                    ₹{priceCeiling.toLocaleString('en-IN')}
-                  </span>
-                </div>
-                <input
-                  type="range"
-                  min="50000"
-                  max="500000"
-                  step="10000"
-                  value={priceCeiling}
-                  onChange={(e) => setPriceCeiling(Number(e.target.value))}
-                  className="w-full accent-[#B94700] h-1.5 bg-[#E9DFD2] rounded-none cursor-pointer"
-                />
-                <div className="flex justify-between font-['Manrope'] text-[9px] text-[#57534E] uppercase">
-                  <span>₹50,000</span>
-                  <span>₹5,00,000+</span>
-                </div>
-              </div>
-
-              {/* Availability Checkboxes */}
-              <div className="space-y-2 pt-2 border-t border-[#E9DFD2] text-xs font-['Manrope']">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" defaultChecked className="accent-[#B94700]" />
-                  <span className="text-[#111111]">Ready to Ship (24h)</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="accent-[#B94700]" />
-                  <span className="text-[#111111]">Salon Reservation Only</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="accent-[#B94700]" />
-                  <span className="text-[#111111]">Made-to-Order Commission</span>
-                </label>
-              </div>
-
-              <button
-                onClick={() => {}}
-                className="w-full py-3 bg-[#B94700] hover:bg-[#9e3d00] text-white font-['Manrope'] text-xs uppercase tracking-widest font-semibold shadow-md transition-colors cursor-pointer"
-              >
-                Apply Preferences
-              </button>
-            </div>
-          </aside>
-
-          {/* Product Listing Grid */}
-          <div className="col-span-1 lg:col-span-9">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10">
-              {filteredProducts.map((product, idx) => {
-                const saved = isWishlisted(product.id);
-                return (
-                  <React.Fragment key={product.id}>
-                    {/* Mid-Grid Bento Editorial Monograph Break after 2nd product */}
-                    {idx === 2 && (
-                      <div className="col-span-2 md:col-span-3 bg-[#f0ede9] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-[#E9DFD2] shadow-sm my-2">
-                        <div className="max-w-md space-y-2 text-left">
-                          <span className="font-['Manrope'] text-[10px] uppercase tracking-widest text-[#B94700] font-bold">
-                            Atelier Monograph Series
-                          </span>
-                          <h3 className="font-['EB_Garamond'] text-2xl md:text-3xl text-[#111111]">
-                            Double-Faced Cashmere Origin
-                          </h3>
-                          <p className="font-['Manrope'] text-xs text-[#57534E] leading-relaxed">
-                            Hand-split edges, invisibly blind-stitched by five master artisans in our Biella manufacture. Designed to withstand seasons of quiet dignity.
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => onNavigate('article')}
-                          className="px-6 py-3 bg-[#111111] text-white font-['Manrope'] text-xs uppercase tracking-widest hover:bg-[#B94700] transition-colors shadow-md whitespace-nowrap cursor-pointer"
-                        >
-                          Explore The Monograph
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Standard 4:5 Product Card */}
-                    <article className="flex flex-col group relative bg-white p-3 border border-[#E9DFD2]/60 shadow-xs hover:shadow-md transition-shadow">
-                      <div className="relative w-full aspect-[4/5] bg-[#f0ede9] overflow-hidden mb-3">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          onClick={() => onSelectProduct(product)}
-                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 cursor-pointer"
-                        />
-                        {product.badges && product.badges.length > 0 && (
-                          <span className="absolute top-2 left-2 bg-[#111111]/90 text-white font-['Manrope'] text-[9px] uppercase px-2 py-0.5 tracking-widest font-semibold">
-                            {product.badges[0]}
-                          </span>
-                        )}
-                        <button
-                          type="button"
-                          aria-label="Save to Wishlist"
-                          onClick={() => onToggleWishlist(product)}
-                          className="absolute top-2 right-2 w-9 h-9 rounded-full bg-white/85 backdrop-blur-md flex items-center justify-center text-[#111111] hover:text-[#B94700] transition-colors cursor-pointer shadow-xs"
-                        >
-                          <span className={`material-symbols-outlined text-[18px] ${saved ? 'text-[#B94700]' : ''}`}>
-                            {saved ? 'favorite' : 'favorite_border'}
-                          </span>
-                        </button>
-
-                        {/* Quick View & Add on Hover */}
-                        <div className="absolute inset-x-2 bottom-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hidden sm:block">
-                          <button
-                            type="button"
-                            onClick={() => onAddToCart(product)}
-                            className="w-full py-2 bg-[#111111] hover:bg-[#B94700] text-white font-['Manrope'] text-[10px] uppercase tracking-wider font-semibold transition-colors shadow-md cursor-pointer"
-                          >
-                            Quick Add
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col justify-between flex-1">
-                        <div>
-                          <div className="flex items-center justify-between text-[#57534E] font-['Manrope'] text-[9px] uppercase tracking-wider mb-0.5">
-                            <span>{product.category}</span>
-                            {product.shades && (
-                              <div className="flex items-center gap-1">
-                                {product.shades.slice(0, 2).map((s) => (
-                                  <span key={s.name} className="w-2.5 h-2.5 rounded-full border border-black/20" style={{ backgroundColor: s.color }} />
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          <h2
-                            onClick={() => onSelectProduct(product)}
-                            className="font-['EB_Garamond'] text-lg text-[#111111] group-hover:text-[#B94700] transition-colors line-clamp-1 cursor-pointer font-medium"
-                          >
-                            {product.name}
-                          </h2>
-                        </div>
-                        <div className="pt-2 mt-2 border-t border-[#E9DFD2]/60 flex items-center justify-between">
-                          <span className="font-['Manrope'] text-xs font-semibold text-[#111111]">
-                            ₹{product.price.toLocaleString('en-IN')}
-                          </span>
-                          <button
-                            onClick={() => onAddToCart(product)}
-                            className="text-[#9e3d00] hover:text-[#111111] font-['Manrope'] text-[10px] uppercase tracking-wider font-bold cursor-pointer sm:hidden"
-                          >
-                            + Add
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  </React.Fragment>
-                );
-              })}
-            </div>
-
-            {/* Pagination / Progress Bar Indicator */}
-            <div className="pt-16 pb-8 flex flex-col items-center justify-center text-center space-y-3 max-w-sm mx-auto">
-              <p className="font-['Manrope'] text-[10px] text-[#57534E] uppercase tracking-widest font-semibold">
-                Viewing {filteredProducts.length} of 48 pieces
-              </p>
-              <div className="w-full h-1 bg-[#E9DFD2] overflow-hidden">
-                <div
-                  className="h-full bg-[#B94700] transition-all duration-500"
-                  style={{ width: `${Math.min(100, (filteredProducts.length / 48) * 100)}%` }}
-                />
-              </div>
-              <button
-                type="button"
-                className="mt-2 px-8 py-3 bg-[#111111] text-white hover:bg-[#B94700] font-['Manrope'] text-xs uppercase tracking-widest transition-colors cursor-pointer shadow-md"
-              >
-                Load More Creations
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mobile Floating Action Button: Sticky Filter & Sort Pill */}
-      <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 lg:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileFilterOpen(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-[#111111] text-white rounded-full shadow-2xl hover:bg-[#B94700] active:scale-95 transition-all cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[18px]">tune</span>
-          <span className="font-['Manrope'] text-xs uppercase tracking-wider font-semibold">
-            Filter & Sort
-          </span>
-          <span className="w-4 h-4 bg-[#B94700] text-white font-['Manrope'] text-[9px] rounded-full flex items-center justify-center font-bold">
-            2
-          </span>
-        </button>
-      </div>
-
-      {/* Mobile Bottom Sheet Filter Modal */}
-      {mobileFilterOpen && (
+      {/* 5. Filter & Sort Overlay Drawer */}
+      {filterDrawerOpen && (
         <div
-          className="fixed inset-0 z-50 bg-[#111111]/60 backdrop-blur-xs flex flex-col justify-end lg:hidden animate-in fade-in duration-200"
-          onClick={() => setMobileFilterOpen(false)}
+          className="fixed inset-0 z-50 bg-[#111111]/60 backdrop-blur-xs flex justify-end animate-in fade-in duration-200"
+          onClick={() => setFilterDrawerOpen(false)}
         >
           <div
-            className="w-full bg-[#F8F5F0] rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in slide-in-from-bottom duration-300 pb-safe border-t border-[#E9DFD2]"
+            className="w-full max-w-md bg-white h-full shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-in slide-in-from-right duration-300 font-['Manrope']"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="p-4 bg-[#f6f3ee] flex items-center justify-between border-b border-[#E9DFD2]">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[20px] text-[#111111]">tune</span>
-                <h3 className="font-['EB_Garamond'] text-xl uppercase tracking-wider text-[#111111]">
-                  Filter & Sort Creations
-                </h3>
+            <div>
+              {/* Drawer Title & Close */}
+              <div className="flex items-center justify-between pb-4 border-b border-[#E9DFD2] mb-6">
+                <span className="font-['EB_Garamond'] text-2xl uppercase tracking-wider text-[#111111]">
+                  FILTERS
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setFilterDrawerOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center text-[#111111] hover:text-[#B94700]"
+                >
+                  <span className="material-symbols-outlined text-[24px]">close</span>
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="w-9 h-9 flex items-center justify-center text-[#111111]"
-              >
-                <span className="material-symbols-outlined text-[22px]">close</span>
-              </button>
-            </div>
 
-            {/* Scrollable Content */}
-            <div className="p-6 overflow-y-auto space-y-6 font-['Manrope'] text-xs">
-              {/* Sort */}
-              <div className="space-y-2">
-                <label className="uppercase tracking-widest text-[10px] text-[#57534E] font-semibold block">
+              {/* Sort Order */}
+              <div className="space-y-3 mb-6">
+                <label className="text-xs uppercase tracking-widest text-[#57534E] font-bold block">
                   Sort Order
                 </label>
                 <div className="grid grid-cols-2 gap-2">
-                  {['Curated', 'Newest', 'HighLow', 'LowHigh'].map((s) => (
+                  {[
+                    { id: 'Curated', label: 'Curated' },
+                    { id: 'Newest', label: 'Newest' },
+                    { id: 'HighLow', label: 'Price High-Low' },
+                    { id: 'LowHigh', label: 'Price Low-High' },
+                  ].map((s) => (
                     <button
-                      key={s}
+                      key={s.id}
                       type="button"
-                      onClick={() => setSortBy(s)}
-                      className={`py-2.5 px-3 text-center uppercase tracking-wider text-[10px] font-semibold transition-colors ${
-                        sortBy === s
-                          ? 'bg-[#111111] text-white'
-                          : 'bg-white border border-[#E9DFD2] text-[#111111]'
+                      onClick={() => setSortBy(s.id)}
+                      className={`py-2.5 px-3 text-center uppercase tracking-wider text-[10px] font-semibold transition-colors border ${
+                        sortBy === s.id
+                          ? 'bg-[#111111] text-white border-[#111111]'
+                          : 'bg-white text-[#111111] border-[#E9DFD2] hover:border-[#111111]'
                       }`}
                     >
-                      {s === 'Curated' ? 'Curated' : s === 'Newest' ? 'Newest' : s === 'HighLow' ? 'Price High-Low' : 'Price Low-High'}
+                      {s.label}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Price Ceiling */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="uppercase tracking-widest text-[10px] text-[#57534E] font-semibold">
-                    Price Ceiling
-                  </span>
-                  <span className="font-bold text-[#111111]">₹{priceCeiling.toLocaleString('en-IN')}</span>
-                </div>
-                <input
-                  type="range"
-                  min="50000"
-                  max="500000"
-                  step="10000"
-                  value={priceCeiling}
-                  onChange={(e) => setPriceCeiling(Number(e.target.value))}
-                  className="w-full accent-[#B94700]"
-                />
-              </div>
-
-              {/* Colors */}
-              <div className="space-y-2">
-                <span className="uppercase tracking-widest text-[10px] text-[#57534E] font-semibold block">
+              {/* Color Selection */}
+              <div className="space-y-3 mb-6">
+                <span className="text-xs uppercase tracking-widest text-[#57534E] font-bold block">
                   Color Tone
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -515,22 +423,22 @@ export const ShopView: React.FC<ShopViewProps> = ({
                       key={c.label}
                       type="button"
                       onClick={() => setSelectedColor(selectedColor === c.label ? null : c.label)}
-                      className={`px-3 py-1.5 flex items-center gap-1.5 border text-[10px] uppercase font-semibold transition-colors ${
+                      className={`px-3 py-1.5 flex items-center gap-2 border text-[10px] uppercase font-semibold transition-colors ${
                         selectedColor === c.label
                           ? 'bg-[#111111] text-white border-[#111111]'
-                          : 'bg-white text-[#111111] border-[#E9DFD2]'
+                          : 'bg-white text-[#111111] border-[#E9DFD2] hover:border-[#111111]'
                       }`}
                     >
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c.hex }} />
+                      <span className="w-2.5 h-2.5 rounded-full border border-black/20" style={{ backgroundColor: c.hex }} />
                       {c.label}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Sizes */}
-              <div className="space-y-2">
-                <span className="uppercase tracking-widest text-[10px] text-[#57534E] font-semibold block">
+              {/* Size Selection */}
+              <div className="space-y-3 mb-6">
+                <span className="text-xs uppercase tracking-widest text-[#57534E] font-bold block">
                   Italian Sizing
                 </span>
                 <div className="grid grid-cols-3 gap-2">
@@ -539,10 +447,10 @@ export const ShopView: React.FC<ShopViewProps> = ({
                       key={s}
                       type="button"
                       onClick={() => setSelectedSize(selectedSize === s ? null : s)}
-                      className={`py-2 text-center uppercase tracking-wider text-[10px] font-semibold transition-colors ${
+                      className={`py-2 text-center uppercase tracking-wider text-[10px] font-semibold transition-colors border ${
                         selectedSize === s
-                          ? 'bg-[#111111] text-white'
-                          : 'bg-white border border-[#E9DFD2] text-[#111111]'
+                          ? 'bg-[#111111] text-white border-[#111111]'
+                          : 'bg-white text-[#111111] border-[#E9DFD2] hover:border-[#111111]'
                       }`}
                     >
                       {s}
@@ -550,33 +458,71 @@ export const ShopView: React.FC<ShopViewProps> = ({
                   ))}
                 </div>
               </div>
+
+              {/* Price Ceiling */}
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs uppercase tracking-widest text-[#57534E] font-bold">
+                    Price Ceiling
+                  </span>
+                  <span className="font-bold text-[#111111] text-xs">₹{priceCeiling.toLocaleString('en-IN')}</span>
+                </div>
+                <input
+                  type="range"
+                  min="50000"
+                  max="800000"
+                  step="25000"
+                  value={priceCeiling}
+                  onChange={(e) => setPriceCeiling(Number(e.target.value))}
+                  className="w-full accent-[#D34500]"
+                />
+              </div>
             </div>
 
-            {/* Bottom Actions */}
-            <div className="p-4 bg-[#f6f3ee] border-t border-[#E9DFD2] flex items-center gap-3">
+            {/* Bottom Drawer Actions */}
+            <div className="pt-4 border-t border-[#E9DFD2] flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setSelectedColor(null);
                   setSelectedSize(null);
-                  setPriceCeiling(500000);
-                  setMobileFilterOpen(false);
+                  setPriceCeiling(800000);
+                  setSortBy('Curated');
                 }}
-                className="w-1/3 py-3 text-center bg-white border border-[#E9DFD2] font-['Manrope'] text-[10px] uppercase tracking-wider text-[#111111]"
+                className="w-1/3 py-3.5 text-center border border-[#111111] font-['Manrope'] text-[10px] uppercase tracking-widest text-[#111111] font-bold hover:bg-[#FAF8F5]"
               >
-                Reset
+                CLEAR
               </button>
               <button
                 type="button"
-                onClick={() => setMobileFilterOpen(false)}
-                className="w-2/3 py-3 text-center bg-[#B94700] hover:bg-[#9e3d00] font-['Manrope'] text-xs uppercase tracking-wider text-white font-semibold shadow-md"
+                onClick={() => setFilterDrawerOpen(false)}
+                className="w-2/3 py-3.5 text-center bg-[#D34500] hover:bg-[#b93c00] font-['Manrope'] text-xs uppercase tracking-widest text-white font-bold transition-colors cursor-pointer"
               >
-                Apply Filters ({filteredProducts.length})
+                APPLY ({filteredProducts.length})
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Sticky Bottom Floating Action Button: Filter & Sort */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button
+          type="button"
+          onClick={() => setFilterDrawerOpen(true)}
+          style={{ width: '215.5px', height: '44px' }}
+          className="flex items-center justify-center gap-2.5 bg-[#111111] text-white rounded-full shadow-2xl hover:bg-[#D34500] active:scale-95 transition-all cursor-pointer border border-white/20"
+        >
+          <span className="material-symbols-outlined text-[18px]">tune</span>
+          <span className="font-['Manrope'] text-xs uppercase tracking-[0.15em] font-bold">
+            FILTER & SORT
+          </span>
+          <span className="w-4 h-4 bg-[#D34500] text-white font-['Manrope'] text-[9px] rounded-full flex items-center justify-center font-bold">
+            {filteredProducts.length}
+          </span>
+        </button>
+      </div>
+
     </div>
   );
 };

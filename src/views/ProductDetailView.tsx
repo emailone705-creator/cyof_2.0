@@ -25,14 +25,154 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [selectSizeSheetOpen, setSelectSizeSheetOpen] = useState(false);
-  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
-  
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryZoomScale, setGalleryZoomScale] = useState(1);
+  const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
   // Tab state for recommendations
   const [activeRecommendationTab, setActiveRecommendationTab] = useState<'you-may-like' | 'recently-viewed'>('you-may-like');
+  const [shopLookIndex, setShopLookIndex] = useState(0);
+  const shopTheLookItems = PRODUCTS.slice(1, 4);
 
-  // Newsletter state
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  // Carousel ref & handlers for recommendation section
+  const recommendationCarouselRef = useRef<HTMLDivElement>(null);
+
+  const scrollRecommendationsLeft = () => {
+    if (recommendationCarouselRef.current) {
+      recommendationCarouselRef.current.scrollBy({ left: -340, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRecommendationsRight = () => {
+    if (recommendationCarouselRef.current) {
+      recommendationCarouselRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+    }
+  };
+
+  const images = product.images.length > 0 ? product.images : [product.image];
+  const galleryImages = images.length >= 6 ? images : [...images, ...images, ...images].slice(0, 6);
+  const saved = isWishlisted(product.id);
+
+  const openGallery = (index: number = 0) => {
+    setGalleryIndex(index);
+    setGalleryZoomScale(1);
+    setDragPos({ x: 0, y: 0 });
+    setGalleryOpen(true);
+  };
+
+  const closeGallery = () => {
+    setGalleryOpen(false);
+    setGalleryZoomScale(1);
+    setDragPos({ x: 0, y: 0 });
+    setIsDragging(false);
+  };
+
+  const nextGalleryImage = () => {
+    setGalleryIndex((prev) => (prev + 1) % galleryImages.length);
+    setGalleryZoomScale(1);
+    setDragPos({ x: 0, y: 0 });
+  };
+
+  const prevGalleryImage = () => {
+    setGalleryIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    setGalleryZoomScale(1);
+    setDragPos({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setGalleryZoomScale((prev) => Math.min(prev + 0.5, 3));
+  };
+
+  const handleZoomOut = () => {
+    setGalleryZoomScale((prev) => {
+      const next = Math.max(prev - 0.5, 1);
+      if (next === 1) setDragPos({ x: 0, y: 0 });
+      return next;
+    });
+  };
+
+  const handleToggleZoom = () => {
+    setGalleryZoomScale((prev) => {
+      const next = prev === 1 ? 2 : 1;
+      if (next === 1) setDragPos({ x: 0, y: 0 });
+      return next;
+    });
+  };
+
+  // Drag / Pan handlers for zoomed gallery image
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (galleryZoomScale <= 1) return;
+    e.preventDefault();
+    setIsDragging(true);
+    dragStartRef.current = {
+      x: e.clientX - dragPos.x,
+      y: e.clientY - dragPos.y,
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || galleryZoomScale <= 1) return;
+    e.preventDefault();
+    setDragPos({
+      x: e.clientX - dragStartRef.current.x,
+      y: e.clientY - dragStartRef.current.y,
+    });
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleGalleryTouchStart = (e: React.TouchEvent) => {
+    if (galleryZoomScale <= 1) return;
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragStartRef.current = {
+        x: e.touches[0].clientX - dragPos.x,
+        y: e.touches[0].clientY - dragPos.y,
+      };
+    }
+  };
+
+  const handleGalleryTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || galleryZoomScale <= 1) return;
+    if (e.touches.length === 1) {
+      setDragPos({
+        x: e.touches[0].clientX - dragStartRef.current.x,
+        y: e.touches[0].clientY - dragStartRef.current.y,
+      });
+    }
+  };
+
+  const handleGalleryTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Keyboard navigation & body scroll locking for gallery modal
+  useEffect(() => {
+    if (!galleryOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeGallery();
+      } else if (e.key === 'ArrowRight') {
+        nextGalleryImage();
+      } else if (e.key === 'ArrowLeft') {
+        prevGalleryImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [galleryOpen, galleryImages.length]);
 
   // Accordion state
   const [openAccordions, setOpenAccordions] = useState<{ [key: string]: boolean }>({
@@ -60,12 +200,36 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     return () => observer.disconnect();
   }, []);
 
+  // Touch swipe gesture handlers for loop sliding & tap to open gallery
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const deltaX = touchStartX.current - touchEndX.current;
+    if (deltaX > 40) {
+      // Swiped left -> Loop to next image
+      setSelectedSlide((prev) => (prev + 1) % images.length);
+    } else if (deltaX < -40) {
+      // Swiped right -> Loop to previous image
+      setSelectedSlide((prev) => (prev - 1 + images.length) % images.length);
+    } else if (Math.abs(deltaX) <= 10) {
+      // Finger tap -> Open popup gallery
+      openGallery(selectedSlide);
+    }
+  };
+
   const toggleAccordion = (key: string) => {
     setOpenAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
-  const images = product.images.length > 0 ? product.images : [product.image];
-  const saved = isWishlisted(product.id);
 
   interface SizeOption {
     label: string;
@@ -101,39 +265,131 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     }
   };
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newsletterEmail) {
-      setNewsletterSubscribed(true);
-      setTimeout(() => setNewsletterSubscribed(false), 4000);
-      setNewsletterEmail('');
-    }
-  };
-
   return (
     <div className="w-full flex flex-col bg-[#fcf9f4] min-h-screen text-[#1c1c19] relative pb-24 lg:pb-0">
       
-      {/* High-Resolution Zoom Modal */}
-      {zoomedImage && (
+      {/* GALLERY Popup Modal (Matching screenshot UI) */}
+      {galleryOpen && (
         <div
-          className="fixed inset-0 z-50 bg-[#111111]/95 backdrop-blur-md flex flex-col justify-center items-center p-4 cursor-zoom-out animate-in fade-in duration-200"
-          onClick={() => setZoomedImage(null)}
+          className="fixed inset-0 z-50 bg-[#FFFFFF] flex flex-col justify-between overflow-hidden animate-in fade-in duration-200 select-none"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeGallery();
+          }}
         >
-          <button
-            type="button"
-            onClick={() => setZoomedImage(null)}
-            className="absolute top-6 right-6 text-white p-2 hover:text-[#B94700] transition-colors"
-          >
-            <span className="material-symbols-outlined text-[32px]">close</span>
-          </button>
-          <img
-            src={zoomedImage}
-            alt="High-resolution atelier magnification"
-            className="max-h-[85vh] max-w-[90vw] object-contain shadow-2xl"
-          />
-          <p className="font-['Manrope'] text-xs uppercase tracking-widest text-[#E9DFD2] mt-4">
-            CYOF High-Resolution Atelier Magnification • #CraftedYourOwnFashion
-          </p>
+          {/* Header Bar */}
+          <div className="relative flex items-center justify-center px-6 py-4 border-b border-[#E9DFD2]/50 bg-white shrink-0 z-20">
+            <h2 className="font-['EB_Garamond'] text-xl sm:text-2xl font-normal uppercase tracking-[0.2em] text-[#111111]">
+              GALLERY
+            </h2>
+            <button
+              type="button"
+              onClick={closeGallery}
+              style={{ backgroundColor: '#D34500' }}
+              className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#D34500] hover:bg-[#B94700] text-white flex items-center justify-center transition-colors cursor-pointer"
+              aria-label="Close Gallery"
+            >
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+
+          {/* Main Image Stage */}
+          <div className="flex-1 relative flex items-center justify-center p-4 sm:p-8 bg-[#fcfbf9] overflow-hidden">
+            {/* Left Chevron Button */}
+            <button
+              type="button"
+              onClick={prevGalleryImage}
+              className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#111111] shadow-md flex items-center justify-center absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 transition-all cursor-pointer hover:scale-105 active:scale-95"
+              aria-label="Previous image"
+            >
+              <span className="material-symbols-outlined text-[24px]">chevron_left</span>
+            </button>
+
+            {/* Image Container Window - Scales responsively with image zoom level */}
+            <div
+              className="relative max-h-full max-w-full flex items-center justify-center touch-none select-none"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUpOrLeave}
+              onMouseLeave={handleMouseUpOrLeave}
+              onTouchStart={handleGalleryTouchStart}
+              onTouchMove={handleGalleryTouchMove}
+              onTouchEnd={handleGalleryTouchEnd}
+              style={{
+                cursor: galleryZoomScale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+                transform: `translate(${dragPos.x}px, ${dragPos.y}px) scale(${galleryZoomScale})`,
+                transformOrigin: 'center center',
+                transition: isDragging ? 'none' : 'transform 150ms ease-out',
+                willChange: 'transform',
+              }}
+            >
+              <img
+                src={galleryImages[galleryIndex]}
+                alt={`${product.name} gallery view ${galleryIndex + 1}`}
+                className="max-h-[62vh] sm:max-h-[72vh] max-w-[85vw] object-contain select-none pointer-events-none"
+              />
+            </div>
+
+            {/* Right Chevron Button */}
+            <button
+              type="button"
+              onClick={nextGalleryImage}
+              className="w-10 h-10 rounded-full bg-white/90 hover:bg-white text-[#111111] shadow-md flex items-center justify-center absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 transition-all cursor-pointer hover:scale-105 active:scale-95"
+              aria-label="Next image"
+            >
+              <span className="material-symbols-outlined text-[24px]">chevron_right</span>
+            </button>
+
+            {/* Bottom Line/Dash Slide Indicators */}
+            <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-1.5 z-20">
+              {galleryImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setGalleryIndex(idx);
+                    setGalleryZoomScale(1);
+                    setDragPos({ x: 0, y: 0 });
+                  }}
+                  className={`h-[2px] transition-all cursor-pointer ${
+                    galleryIndex === idx
+                      ? 'w-5 sm:w-6 bg-[#D34500]'
+                      : 'w-2.5 sm:w-3 bg-[#E5E5E5] hover:bg-[#CCCCCC]'
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Zoom Control Toolbar */}
+          <div className="py-4 bg-white border-t border-[#E9DFD2]/50 flex items-center justify-center gap-4 shrink-0 z-20">
+            <button
+              type="button"
+              onClick={handleZoomOut}
+              disabled={galleryZoomScale <= 1}
+              className="w-10 h-10 rounded-full bg-[#F3F3F3] hover:bg-[#E5E5E5] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-[#111111] transition-colors cursor-pointer"
+              aria-label="Zoom Out"
+            >
+              <span className="material-symbols-outlined text-[20px]">remove</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleToggleZoom}
+              className="w-10 h-10 rounded-full bg-[#F3F3F3] hover:bg-[#E5E5E5] flex items-center justify-center text-[#111111] transition-colors cursor-pointer"
+              aria-label="Toggle Fit or Zoom"
+            >
+              <span className="material-symbols-outlined text-[20px]">search</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleZoomIn}
+              disabled={galleryZoomScale >= 3}
+              className="w-10 h-10 rounded-full bg-[#F3F3F3] hover:bg-[#E5E5E5] disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-[#111111] transition-colors cursor-pointer"
+              aria-label="Zoom In"
+            >
+              <span className="material-symbols-outlined text-[20px]">add</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -240,10 +496,16 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
             {/* Bottom Dismiss CTA */}
             <button
               type="button"
-              onClick={() => setSelectSizeSheetOpen(false)}
-              className="w-full mt-4 py-3.5 bg-[#111111] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#B94700] transition-colors cursor-pointer"
+              onClick={() => {
+                setSelectSizeSheetOpen(false);
+                if (selectedSize) {
+                  onAddToCart(product, selectedShade, selectedSize);
+                }
+              }}
+              style={{ backgroundColor: '#D34500' }}
+              className="w-full mt-4 py-3.5 bg-[#D34500] hover:bg-[#b93c00] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold transition-colors cursor-pointer"
             >
-              CONFIRM SELECTION
+              {selectedSize ? `ADD TO BAG — SIZE ${selectedSize}` : 'CONFIRM SELECTION'}
             </button>
           </div>
         </div>
@@ -251,20 +513,23 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
       {/* STICKY BOTTOM BUTTON (Appears when scrolling down until inline button is in view) */}
       {!isInlineButtonVisible && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#111111] text-white border-t border-[#111111] shadow-2xl animate-in slide-in-from-bottom duration-300">
-          <div className="max-w-[1600px] mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#FFFFFF] text-[#111111] border-t border-[#E9DFD2] shadow-2xl animate-in slide-in-from-bottom duration-300 h-[65px] flex items-center">
+          <div className="w-full max-w-[1600px] mx-auto px-4 flex items-center justify-between gap-4 h-full">
             <div className="hidden sm:flex items-center gap-3 min-w-0">
-              <img src={product.image} alt={product.name} className="w-10 h-10 object-cover border border-[#333333]" />
+              <img src={product.image} alt={product.name} className="w-10 h-10 object-cover border border-[#E9DFD2]" />
               <div className="min-w-0 font-['Manrope'] text-left">
-                <p className="text-xs text-white uppercase tracking-wider font-semibold truncate">{product.name}</p>
-                <p className="text-[11px] text-[#D6C7B2]">₹{product.price.toLocaleString('en-IN')}</p>
+                <p className="text-xs text-[#111111] uppercase tracking-wider font-semibold truncate">{product.name}</p>
+                <p className="text-[11px] text-[#B94700] font-bold">₹{product.price.toLocaleString('en-IN')}</p>
               </div>
             </div>
 
             <button
               type="button"
               onClick={handleMainAction}
-              className="w-full sm:w-auto sm:min-w-[280px] h-12 bg-[#111111] hover:bg-[#B94700] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-[0.99]"
+              style={{
+                backgroundColor: '#D34500',
+              }}
+              className="w-full sm:w-auto sm:min-w-[280px] h-11 bg-[#D34500] hover:bg-[#b93c00] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
             >
               <span>{selectedSize ? `ADD TO BAG — ${selectedSize}` : 'SELECT SIZE'}</span>
             </button>
@@ -280,7 +545,13 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <div className="lg:col-span-7 flex flex-col space-y-4">
             
             {/* Mobile Carousel Track */}
-            <div className="lg:hidden relative w-full overflow-hidden bg-[#f0ede9] shadow-sm">
+            <div
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onClick={() => openGallery(selectedSlide)}
+              className="lg:hidden relative w-full overflow-hidden bg-[#f0ede9] shadow-sm select-none cursor-pointer"
+            >
               <div
                 className="flex transition-transform duration-500 ease-out will-change-transform"
                 style={{ transform: `translateX(-${selectedSlide * 100}%)` }}
@@ -294,7 +565,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
               {/* Mobile Badges & Actions */}
               <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#111111]/90 text-white font-['Manrope'] text-[9px] uppercase px-2 py-1 tracking-widest font-semibold">
+                <span className="bg-[#FFFFFF] text-[#D34500] border border-[#E9DFD2] font-['Manrope'] text-[9px] uppercase px-2.5 py-[3px] tracking-widest font-bold shadow-xs">
                   NEW IN
                 </span>
               </div>
@@ -302,35 +573,31 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setZoomedImage(images[selectedSlide])}
-                  className="w-9 h-9 bg-white/90 text-[#111111] flex items-center justify-center shadow-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleWishlist(product);
+                  }}
+                  className="w-9 h-9 bg-transparent text-[#111111] flex items-center justify-center cursor-pointer drop-shadow-xs"
                 >
-                  <span className="material-symbols-outlined text-[18px]">zoom_in</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onToggleWishlist(product)}
-                  className="w-9 h-9 bg-white/90 text-[#111111] flex items-center justify-center shadow-xs"
-                >
-                  <span className={`material-symbols-outlined text-[18px] ${saved ? 'text-[#B94700]' : ''}`}>
+                  <span className={`material-symbols-outlined text-[21px] ${saved ? 'text-[#B94700]' : ''}`}>
                     {saved ? 'favorite' : 'favorite_border'}
                   </span>
                 </button>
               </div>
 
-              {/* Slide Counter */}
-              <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between">
-                <span className="bg-[#111111]/80 px-2.5 py-1 text-white font-['Manrope'] text-[10px] uppercase tracking-widest font-semibold">
-                  0{selectedSlide + 1} / 0{images.length}
-                </span>
-                <div className="flex items-center gap-1.5">
+              {/* Slide Counter Dots (Numbering span deleted) */}
+              <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-center">
+                <div className="flex items-center gap-1.5 bg-[#111111]/30 backdrop-blur-xs px-3 py-1.5 rounded-full">
                   {images.map((_, i) => (
                     <button
                       key={i}
                       type="button"
-                      onClick={() => setSelectedSlide(i)}
-                      className={`w-2 h-2 rounded-full transition-all ${
-                        selectedSlide === i ? 'bg-[#B94700] w-4' : 'bg-white/60'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedSlide(i);
+                      }}
+                      className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                        selectedSlide === i ? 'bg-[#D34500] w-4' : 'bg-white/80'
                       }`}
                     />
                   ))}
@@ -338,13 +605,13 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             </div>
 
-            {/* Desktop Full-Length Vertical Gallery (Matching Screenshot 1) */}
-            <div className="hidden lg:flex flex-col space-y-4">
-              {images.map((img, i) => (
+            {/* Desktop 2-Column Grid Gallery (Matching Screenshot) */}
+            <div className="hidden lg:grid lg:grid-cols-2 gap-2">
+              {(images.length >= 6 ? images : [...images, ...images, ...images].slice(0, 6)).map((img, i) => (
                 <div
                   key={i}
-                  className="relative w-full aspect-[3/4] bg-[#f0ede9] group overflow-hidden border border-[#E9DFD2]/60 cursor-zoom-in"
-                  onClick={() => setZoomedImage(img)}
+                  onClick={() => openGallery(i)}
+                  className="relative w-full aspect-[3/4] bg-[#f0ede9] group overflow-hidden border border-[#E9DFD2]/60 cursor-pointer"
                 >
                   <img
                     src={img}
@@ -352,22 +619,24 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   {i === 0 && (
-                    <span className="absolute top-4 left-4 bg-[#111111] text-white font-['Manrope'] text-[9px] uppercase px-3 py-1 tracking-widest font-bold">
+                    <span className="absolute top-3 left-3 bg-[#FFFFFF] text-[#111111] border border-[#E9DFD2] font-['Manrope'] text-[9px] uppercase px-2.5 py-[3px] tracking-widest font-semibold shadow-xs">
                       NEW IN
                     </span>
                   )}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleWishlist(product);
-                    }}
-                    className="absolute top-4 right-4 bg-white/90 p-2.5 text-[#111111] hover:text-[#B94700] transition-colors shadow-xs cursor-pointer"
-                  >
-                    <span className={`material-symbols-outlined text-[20px] ${saved ? 'text-[#B94700]' : ''}`}>
-                      {saved ? 'favorite' : 'favorite_border'}
-                    </span>
-                  </button>
+                  {i === 0 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onToggleWishlist(product);
+                      }}
+                      className="absolute top-3 right-3 bg-transparent p-1.5 text-[#111111] hover:text-[#B94700] transition-colors cursor-pointer drop-shadow-xs"
+                    >
+                      <span className={`material-symbols-outlined text-[20px] ${saved ? 'text-[#B94700]' : ''}`}>
+                        {saved ? 'favorite' : 'favorite_border'}
+                      </span>
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -375,7 +644,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
           {/* Right Column: Product Details Lockup (Screenshot 1) */}
           <div className="lg:col-span-5 flex flex-col">
-            <div className="lg:sticky lg:top-28 space-y-6 flex flex-col font-['Manrope']">
+            <div className="lg:sticky lg:top-20 space-y-6 flex flex-col font-['Manrope']">
               
               {/* Title & Price Header */}
               <div className="space-y-2 pb-2">
@@ -430,18 +699,19 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </span>
               </div>
 
-              {/* Main Inline Action Button Container (Observed by IntersectionObserver) */}
+              {/* Main Inline Action Button Container */}
               <div ref={inlineButtonRef} className="pt-2">
                 <button
                   type="button"
                   onClick={handleMainAction}
-                  className="w-full h-14 bg-[#d34500] hover:bg-[#b93c00] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold transition-colors shadow-sm flex items-center justify-center cursor-pointer"
+                  style={{ backgroundColor: '#D34500' }}
+                  className="w-full h-12 bg-[#D34500] hover:bg-[#b93c00] text-white font-['Manrope'] text-xs uppercase tracking-[0.2em] font-bold transition-colors shadow-sm flex items-center justify-center cursor-pointer"
                 >
                   {selectedSize ? 'ADD TO BAG' : 'SELECT SIZE'}
                 </button>
               </div>
 
-              {/* Clean Luxury Accordions (Screenshot 1) */}
+              {/* Clean Luxury Accordions */}
               <div className="space-y-0 divide-y divide-[#E9DFD2] border-t border-b border-[#E9DFD2] pt-1">
                 
                 {/* Product Details */}
@@ -525,139 +795,197 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </div>
               </div>
 
+              {/* Embedded SHOP THE LOOK inside Right Sidebar on PC (Matching Screenshot) */}
+              <div className="pt-6 border-t border-[#E9DFD2] mt-6">
+                <div className="text-center mb-4">
+                  <h2 className="font-['EB_Garamond'] text-2xl text-[#111111] font-normal uppercase tracking-[0.15em] mb-1">
+                    SHOP THE LOOK
+                  </h2>
+                  <p className="font-['Manrope'] text-xs tracking-widest text-[#57534E]">
+                    {shopLookIndex + 1} / {shopTheLookItems.length}
+                  </p>
+                </div>
+
+                {(() => {
+                  const currentItem = shopTheLookItems[shopLookIndex] || shopTheLookItems[0];
+                  return (
+                    <div className="relative max-w-sm mx-auto">
+                      <div className="aspect-[3/4] bg-[#f4f2ee] relative overflow-hidden group">
+                        <img
+                          src={currentItem.image}
+                          alt={currentItem.name}
+                          className="w-full h-full object-cover cursor-pointer group-hover:scale-105 transition-transform duration-500"
+                          onClick={() => onNavigate('product')}
+                        />
+                        <span className="absolute top-3 left-3 bg-white text-[#111111] text-[9px] uppercase tracking-widest font-semibold px-2 py-0.5 shadow-xs">
+                          NEW IN
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => onToggleWishlist(currentItem)}
+                          className="absolute top-3 right-3 bg-transparent p-1 text-[#111111] hover:text-[#B94700] cursor-pointer drop-shadow-xs"
+                          aria-label="Wishlist"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">
+                            {isWishlisted(currentItem.id) ? 'favorite' : 'favorite_border'}
+                          </span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setShopLookIndex((prev) => (prev === 0 ? shopTheLookItems.length - 1 : prev - 1))}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-white text-[#111111] flex items-center justify-center text-sm hover:bg-[#FAF8F5] cursor-pointer shadow-xs border border-r-0 border-[#E9DFD2] z-10"
+                          aria-label="Previous item"
+                        >
+                          ←
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShopLookIndex((prev) => (prev === shopTheLookItems.length - 1 ? 0 : prev + 1))}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 bg-white text-[#111111] flex items-center justify-center text-sm hover:bg-[#FAF8F5] cursor-pointer shadow-xs border border-l-0 border-[#E9DFD2] z-10"
+                          aria-label="Next item"
+                        >
+                          →
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 px-1">
+                        <h3
+                          onClick={() => onNavigate('product')}
+                          className="font-['EB_Garamond'] text-base text-[#111111] font-normal cursor-pointer hover:text-[#B94700] transition-colors"
+                        >
+                          {currentItem.name}
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => onAddToCart(currentItem, currentItem.shades[0]?.name || 'Standard', currentItem.sizes[0]?.label || 'Standard')}
+                          className="text-[#111111] hover:text-[#B94700] p-1 cursor-pointer transition-colors"
+                          aria-label="Add to cart"
+                        >
+                          <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
             </div>
           </div>
         </div>
       </section>
 
-      {/* SHOP THE LOOK Section (Screenshot 1) */}
-      <section className="w-full bg-[#f6f3ee] py-16 border-t border-b border-[#E9DFD2]">
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-16">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="font-['EB_Garamond'] text-2xl md:text-3xl text-[#111111] font-normal uppercase tracking-wider">
-              SHOP THE LOOK
-            </h2>
-            <div className="flex items-center gap-3 font-['Manrope'] text-xs text-[#57534E]">
-              <span>1 / 2</span>
-              <div className="flex items-center gap-1">
-                <button type="button" className="w-8 h-8 border border-[#E9DFD2] bg-white flex items-center justify-center text-[#111111] hover:border-[#111111]">
-                  ←
-                </button>
-                <button type="button" className="w-8 h-8 border border-[#E9DFD2] bg-white flex items-center justify-center text-[#111111] hover:border-[#111111]">
-                  →
-                </button>
-              </div>
-            </div>
-          </div>
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 no-scrollbar">
-            {PRODUCTS.slice(1, 5).map((item) => (
-              <div key={item.id} className="min-w-[75vw] sm:min-w-0 shrink-0 sm:shrink snap-start bg-white p-4 border border-[#E9DFD2] shadow-xs flex flex-col justify-between group">
-                <div className="aspect-[3/4] bg-[#f0ede9] overflow-hidden mb-3 relative">
+
+      {/* YOU MAY ALSO LIKE / RECENTLY VIEWED Tabbed Carousel Section */}
+      <section className="w-full py-12 md:py-16 px-4 md:px-8 lg:px-16 max-w-[1600px] mx-auto font-['Manrope'] relative">
+        {/* Header Tabs */}
+        <div className="w-full border-b border-[#E5E5E5] mb-8">
+          <div className="flex items-center justify-center gap-8 md:gap-12 max-w-xl mx-auto text-center">
+            <button
+              type="button"
+              onClick={() => setActiveRecommendationTab('you-may-like')}
+              className={`pb-3 text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase font-bold transition-colors relative border-b-2 ${
+                activeRecommendationTab === 'you-may-like'
+                  ? 'text-[#111111] border-[#111111] -mb-[1px]'
+                  : 'text-[#888888] border-transparent hover:text-[#111111]'
+              }`}
+            >
+              YOU MAY ALSO LIKE
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveRecommendationTab('recently-viewed')}
+              className={`pb-3 text-xs sm:text-sm md:text-base tracking-[0.2em] uppercase font-bold transition-colors relative border-b-2 ${
+                activeRecommendationTab === 'recently-viewed'
+                  ? 'text-[#111111] border-[#111111] -mb-[1px]'
+                  : 'text-[#888888] border-transparent hover:text-[#111111]'
+              }`}
+            >
+              RECENTLY VIEWED
+            </button>
+          </div>
+        </div>
+
+        {/* Carousel Container with PC Arrow Controls */}
+        <div className="relative group/rec">
+          {/* PC Left Arrow Icon */}
+          <button
+            type="button"
+            onClick={scrollRecommendationsLeft}
+            className="hidden lg:flex absolute -left-3 lg:-left-5 top-[38%] -translate-y-1/2 w-8 h-8 bg-white border border-[#E9DFD2] items-center justify-center text-[#111111] shadow-xs z-10 hover:bg-[#FAF8F5] cursor-pointer"
+            aria-label="Scroll left"
+          >
+            ←
+          </button>
+
+          {/* Horizontal Scrollable Row */}
+          <div
+            ref={recommendationCarouselRef}
+            className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 no-scrollbar pb-4"
+          >
+            {(activeRecommendationTab === 'you-may-like' ? PRODUCTS : [...PRODUCTS].reverse()).map((item) => (
+              <div
+                key={item.id}
+                className="w-[260px] sm:w-[300px] lg:w-[calc(25%-18px)] shrink-0 snap-start group cursor-pointer flex flex-col justify-between"
+                onClick={() => onNavigate('product')}
+              >
+                <div className="w-full aspect-[3/4] bg-[#f4f2ee] overflow-hidden mb-3 relative shrink-0">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
-                  <span className="absolute top-2 left-2 bg-[#111111] text-white text-[8px] uppercase tracking-widest font-bold px-2 py-0.5">
+                  <span className="absolute top-2.5 left-2.5 bg-white text-[#111111] text-[8px] uppercase tracking-widest font-semibold px-2 py-0.5 shadow-xs">
                     NEW IN
                   </span>
                   <button
                     type="button"
-                    onClick={() => onToggleWishlist(item)}
-                    className="absolute top-2 right-2 bg-white/90 p-1.5 text-[#111111] hover:text-[#B94700]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onToggleWishlist(item);
+                    }}
+                    className="absolute top-2.5 right-2.5 bg-transparent p-1.5 text-[#111111] hover:text-[#B94700] cursor-pointer drop-shadow-xs"
+                    aria-label="Wishlist"
                   >
-                    <span className="material-symbols-outlined text-[16px]">favorite_border</span>
+                    <span className="material-symbols-outlined text-[18px]">
+                      {isWishlisted(item.id) ? 'favorite' : 'favorite_border'}
+                    </span>
                   </button>
                   <button
                     type="button"
-                    onClick={() => onAddToCart(item, item.shades[0]?.name || 'Standard', item.sizes[0]?.label || 'Standard')}
-                    className="absolute bottom-2 right-2 w-8 h-8 bg-[#111111] text-white flex items-center justify-center hover:bg-[#B94700]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onAddToCart(item, item.shades[0]?.name || 'Standard', item.sizes[0]?.label || 'Standard');
+                    }}
+                    className="absolute bottom-2.5 right-2.5 w-7 h-7 bg-white text-[#111111] flex items-center justify-center hover:bg-[#111111] hover:text-white transition-colors cursor-pointer shadow-xs border border-[#E9DFD2]"
+                    aria-label="Add to cart"
                   >
                     <span className="material-symbols-outlined text-[16px]">shopping_bag</span>
                   </button>
                 </div>
+
                 <div>
-                  <h3 className="font-['EB_Garamond'] text-base text-[#111111] font-medium line-clamp-1">{item.name}</h3>
-                  <p className="font-['Manrope'] text-xs font-semibold text-[#111111] mt-1">₹{item.price.toLocaleString('en-IN')}</p>
+                  <h3 className="font-['EB_Garamond'] text-sm sm:text-base text-[#111111] font-normal leading-snug line-clamp-1">
+                    {item.name}
+                  </h3>
+                  <p className="font-['EB_Garamond'] text-xs sm:text-sm text-[#111111] font-semibold mt-1">
+                    ₹ {item.price.toLocaleString('en-IN')}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* YOU MAY ALSO LIKE / RECENTLY VIEWED Tabbed Section (Screenshot 1) */}
-      <section className="w-full py-16 px-4 md:px-8 lg:px-16 max-w-[1600px] mx-auto font-['Manrope']">
-        <div className="flex items-center justify-center gap-8 mb-10 border-b border-[#E9DFD2] pb-4">
+          {/* PC Right Arrow Icon */}
           <button
             type="button"
-            onClick={() => setActiveRecommendationTab('you-may-like')}
-            className={`text-xs uppercase tracking-[0.2em] font-bold pb-2 transition-colors border-b-2 ${
-              activeRecommendationTab === 'you-may-like'
-                ? 'text-[#111111] border-[#111111]'
-                : 'text-[#888888] border-transparent hover:text-[#111111]'
-            }`}
+            onClick={scrollRecommendationsRight}
+            className="hidden lg:flex absolute -right-3 lg:-right-5 top-[38%] -translate-y-1/2 w-8 h-8 bg-white border border-[#E9DFD2] items-center justify-center text-[#111111] shadow-xs z-10 hover:bg-[#FAF8F5] cursor-pointer"
+            aria-label="Scroll right"
           >
-            YOU MAY ALSO LIKE
+            →
           </button>
-          <button
-            type="button"
-            onClick={() => setActiveRecommendationTab('recently-viewed')}
-            className={`text-xs uppercase tracking-[0.2em] font-bold pb-2 transition-colors border-b-2 ${
-              activeRecommendationTab === 'recently-viewed'
-                ? 'text-[#111111] border-[#111111]'
-                : 'text-[#888888] border-transparent hover:text-[#111111]'
-            }`}
-          >
-            RECENTLY VIEWED
-          </button>
-        </div>
-
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-8 no-scrollbar">
-          {(activeRecommendationTab === 'you-may-like' ? PRODUCTS.slice(1, 4) : PRODUCTS.slice(2, 5)).map((item) => (
-            <div key={item.id} className="min-w-[75vw] sm:min-w-0 shrink-0 sm:shrink snap-start group cursor-pointer" onClick={() => onNavigate('product')}>
-              <div className="aspect-[3/4] bg-[#f0ede9] overflow-hidden mb-4 relative border border-[#E9DFD2]">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <span className="absolute top-3 left-3 bg-[#111111] text-white text-[9px] uppercase tracking-widest font-bold px-2.5 py-1">
-                  NEW IN
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleWishlist(item);
-                  }}
-                  className="absolute top-3 right-3 bg-white/90 p-2 text-[#111111] hover:text-[#B94700]"
-                >
-                  <span className="material-symbols-outlined text-[18px]">favorite_border</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddToCart(item, item.shades[0]?.name || 'Standard', item.sizes[0]?.label || 'Standard');
-                  }}
-                  className="absolute bottom-3 right-3 w-9 h-9 bg-[#111111] text-white flex items-center justify-center hover:bg-[#B94700]"
-                >
-                  <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-                </button>
-              </div>
-
-              <div className="space-y-1">
-                <h3 className="font-['EB_Garamond'] text-lg text-[#111111] font-normal leading-snug">
-                  {item.name}
-                </h3>
-                <p className="font-['EB_Garamond'] text-base text-[#111111] font-semibold">
-                  ₹ {item.price.toLocaleString('en-IN')}
-                </p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -666,87 +994,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         <span>CYOF</span> | <span>{product.category.toUpperCase()}</span> | <span className="text-[#111111] font-bold">{product.name.toUpperCase()}</span>
       </div>
 
-      {/* House Newsletter Section (Screenshot 1) */}
-      <section className="w-full bg-[#fcf9f4] py-16 px-4 md:px-8 text-center border-b border-[#E9DFD2]">
-        <div className="max-w-md mx-auto space-y-4">
-          <span className="font-['Manrope'] text-[10px] uppercase tracking-[0.25em] text-[#B94700] font-bold block">
-            JOIN THE HOUSE OF CYOF
-          </span>
-          <h2 className="font-['EB_Garamond'] text-2xl sm:text-3xl text-[#111111] font-normal">
-            Sign up to stay up to date on events, collections, and exclusive news.
-          </h2>
 
-          <form onSubmit={handleNewsletterSubmit} className="pt-2">
-            <div className="relative flex items-center border-b border-[#111111] pb-2">
-              <input
-                type="email"
-                required
-                placeholder="Enter your email address *"
-                value={newsletterEmail}
-                onChange={(e) => setNewsletterEmail(e.target.value)}
-                className="w-full bg-transparent font-['Manrope'] text-xs text-[#111111] focus:outline-none placeholder:text-[#888888]"
-              />
-              <button
-                type="submit"
-                className="text-[#111111] hover:text-[#B94700] p-1 font-bold text-lg"
-              >
-                →
-              </button>
-            </div>
-            {newsletterSubscribed && (
-              <p className="text-[11px] text-[#B94700] font-['Manrope'] mt-2 font-semibold animate-in fade-in">
-                Thank you for subscribing to CYOF Private Dispatches.
-              </p>
-            )}
-          </form>
-        </div>
-      </section>
-
-      {/* Footer Accordions (Screenshot 1) */}
-      <footer className="w-full bg-[#fcf9f4] py-8 px-4 md:px-8 max-w-[1600px] mx-auto font-['Manrope'] text-xs text-[#111111]">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-8 border-b border-[#E9DFD2]">
-          <div>
-            <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3">CLIENT SERVICE</h4>
-            <ul className="space-y-2 text-[11px] text-[#57534E]">
-              <li>Contact Us</li>
-              <li>Shipping & Handover</li>
-              <li>Returns & Exchanges</li>
-              <li>Salon Appointment</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3">ABOUT CYOF</h4>
-            <ul className="space-y-2 text-[11px] text-[#57534E]">
-              <li>The Atelier Provenance</li>
-              <li>Artisanal Craftsmanship</li>
-              <li>Monographs & Journal</li>
-              <li>Careers</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3">LEGAL</h4>
-            <ul className="space-y-2 text-[11px] text-[#57534E]">
-              <li>Terms & Conditions</li>
-              <li>Privacy Policy</li>
-              <li>Cookie Settings</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3">STORE LOCATOR</h4>
-            <p className="text-[11px] text-[#57534E] leading-relaxed">
-              Mumbai Flagship Salon — The Oberoi, Nariman Point
-            </p>
-            <p className="text-[10px] uppercase tracking-wider text-[#B94700] font-bold mt-2">
-              INDIA — EN (₹ INR)
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-[#888888] uppercase tracking-widest">
-          <p>© CYOF ATELIER PRIVATE LIMITED • #CraftedYourOwnFashion</p>
-          <p>PROVENANCE REGISTERED</p>
-        </div>
-      </footer>
 
     </div>
   );

@@ -21,8 +21,6 @@ export const CartView: React.FC<CartViewProps> = ({
 }) => {
   const [giftNoteOpen, setGiftNoteOpen] = useState(false);
   const [giftMessage, setGiftMessage] = useState('');
-  const [voucherCode, setVoucherCode] = useState('');
-  const [voucherApplied, setVoucherApplied] = useState(false);
 
   // Reservation countdown timer simulation (28:40)
   const [secondsLeft, setSecondsLeft] = useState(28 * 60 + 40);
@@ -43,13 +41,6 @@ export const CartView: React.FC<CartViewProps> = ({
   const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const whiteGloveThreshold = 500000;
   const progressPercent = Math.min(100, Math.round((subtotal / whiteGloveThreshold) * 100));
-
-  const handleVoucher = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (voucherCode.trim()) {
-      setVoucherApplied(true);
-    }
-  };
 
   const recommendations = [
     {
@@ -318,59 +309,9 @@ export const CartView: React.FC<CartViewProps> = ({
                 </div>
               </div>
 
-              {/* VIP Concierge Passcode Form */}
-              <div className="bg-[#f6f3ee] p-6 border border-[#E9DFD2]">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 mb-2 font-['Manrope']">
-                  <label htmlFor="voucher-code" className="text-xs uppercase tracking-wider text-[#111111] font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-[#B94700]">key</span>
-                    VIP Concierge Invitation or Atelier Passcode
-                  </label>
-                  <span className="text-[10px] text-[#57534E]">Privilege validation</span>
-                </div>
 
-                <form onSubmit={handleVoucher} className="flex flex-col sm:flex-row gap-2 pt-2">
-                  <input
-                    id="voucher-code"
-                    type="text"
-                    value={voucherCode}
-                    onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                    placeholder="e.g. CYOF-SALON-VVIP"
-                    className="flex-1 bg-white border border-[#E9DFD2] px-4 py-2.5 font-['Manrope'] text-xs text-[#111111] uppercase tracking-wider focus:outline-none focus:border-[#111111]"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-[#111111] hover:bg-[#B94700] text-white px-6 py-2.5 font-['Manrope'] text-xs uppercase tracking-widest font-semibold transition-colors whitespace-nowrap cursor-pointer"
-                  >
-                    Apply Privilege
-                  </button>
-                </form>
 
-                {voucherApplied && (
-                  <p className="mt-2 font-['Manrope'] text-xs text-[#B94700] flex items-center gap-1.5 font-medium">
-                    <span className="material-symbols-outlined text-[16px]">verified</span>
-                    Private Salon Invitation Recognized: White-Glove VIP Chauffeur Service Applied.
-                  </p>
-                )}
-              </div>
 
-              {/* Guarantees & Maison Services */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-['Manrope']">
-                <div className="bg-[#f6f3ee] p-4 border border-[#E9DFD2] space-y-1">
-                  <span className="material-symbols-outlined text-[#B94700] text-[22px]">verified_user</span>
-                  <p className="font-semibold text-[#111111] uppercase text-[10px] tracking-wider">Authenticity Certificate</p>
-                  <p className="text-[#57534E]">NFC-cryptographic identity chip inside each piece.</p>
-                </div>
-                <div className="bg-[#f6f3ee] p-4 border border-[#E9DFD2] space-y-1">
-                  <span className="material-symbols-outlined text-[#B94700] text-[22px]">swap_horizontal_circle</span>
-                  <p className="font-semibold text-[#111111] uppercase text-[10px] tracking-wider">30-Day Exchanges</p>
-                  <p className="text-[#57534E]">Private courier returns arranged directly by concierge.</p>
-                </div>
-                <div className="bg-[#f6f3ee] p-4 border border-[#E9DFD2] space-y-1">
-                  <span className="material-symbols-outlined text-[#B94700] text-[22px]">spa</span>
-                  <p className="font-semibold text-[#111111] uppercase text-[10px] tracking-wider">Artisanal Lifetime Spa</p>
-                  <p className="text-[#57534E]">Yearly restorative leather and cashmere refurbishment.</p>
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Sticky Summary Card (5 Cols) */}
@@ -418,28 +359,7 @@ export const CartView: React.FC<CartViewProps> = ({
                     </span>
                   </div>
 
-                  {/* Express Checkout Options */}
-                  <div className="space-y-1 pt-1">
-                    <span className="font-['Manrope'] text-[9px] uppercase tracking-widest text-[#57534E] text-center block">
-                      Instant Express Authorization
-                    </span>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onNavigate('checkout')}
-                        className="w-full bg-[#111111] text-white py-2.5 px-3 flex items-center justify-center gap-1.5 hover:opacity-90 font-['Manrope'] text-xs font-semibold cursor-pointer"
-                      >
-                        UPI & QR Pay
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onNavigate('checkout')}
-                        className="w-full bg-[#111111] text-white py-2.5 px-3 flex items-center justify-center gap-1.5 hover:opacity-90 font-['Manrope'] text-xs font-semibold cursor-pointer"
-                      >
-                        NetBanking / Cards
-                      </button>
-                    </div>
-                  </div>
+
 
                   {/* Primary CTA */}
                   <button
@@ -519,7 +439,7 @@ export const CartView: React.FC<CartViewProps> = ({
       </section>
 
       {/* Mobile Sticky Bottom Checkout Bar */}
-      <div className="lg:hidden fixed bottom-16 inset-x-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md px-4 py-3 border-t border-[#E9DFD2] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#F8F5F0]/95 backdrop-blur-md px-4 py-3 pb-safe border-t border-[#E9DFD2] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
         <div className="flex items-center justify-between gap-4 max-w-md mx-auto">
           <div>
             <span className="font-['Manrope'] text-[9px] uppercase tracking-widest text-[#57534E] block">

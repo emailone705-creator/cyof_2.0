@@ -55,4 +55,6 @@ export type ViewRoute =
   | 'account-returns'
   | 'account-loyalty'
   | 'account-support'
+  | 'terms-conditions'
+  | 'privacy-policy'
   | 'order-confirmed';
