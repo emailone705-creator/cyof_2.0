@@ -59,5 +59,7 @@ export type ViewRoute =
   | 'privacy-policy'
   | 'returns-exchanges-policy'
   | 'returns-exchanges'
+  | 'shipping-handover-policy'
+  | 'about-us'
   | 'faq'
   | 'order-confirmed';

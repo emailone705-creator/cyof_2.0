@@ -74,11 +74,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('account')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
-                  Craftsmanship Appointment
-                </button>
-              </li>
-              <li>
                 <button onClick={() => onNavigate('faq')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   FAQ
                 </button>
@@ -90,13 +85,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="font-bold text-[10px] uppercase tracking-widest mb-3 text-[#111111]">ABOUT CYOF</h4>
             <ul className="space-y-2 text-[11px] text-[#57534E]">
               <li>
-                <button onClick={() => onNavigate('journal')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                <button onClick={() => onNavigate('about-us')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   About Us
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('journal')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
-                  The Atelier Provenance
                 </button>
               </li>
               <li>
@@ -136,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('account-orders')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
+                <button onClick={() => onNavigate('shipping-handover-policy')} className="hover:text-[#B94700] transition-colors cursor-pointer text-left">
                   Shipping & Handover Policy
                 </button>
               </li>

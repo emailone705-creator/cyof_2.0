@@ -34,6 +34,8 @@ import { PrivacyPolicyView } from './views/PrivacyPolicyView';
 import { FaqView } from './views/FaqView';
 import { ReturnsExchangesPolicyView } from './views/ReturnsExchangesPolicyView';
 import { ReturnsExchangesView } from './views/ReturnsExchangesView';
+import { ShippingHandoverPolicyView } from './views/ShippingHandoverPolicyView';
+import { AboutUsView } from './views/AboutUsView';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<ViewRoute>('home');
@@ -330,6 +332,14 @@ export default function App() {
 
         {currentRoute === 'returns-exchanges' && (
           <ReturnsExchangesView onNavigate={handleNavigate} />
+        )}
+
+        {currentRoute === 'shipping-handover-policy' && (
+          <ShippingHandoverPolicyView onNavigate={handleNavigate} />
+        )}
+
+        {currentRoute === 'about-us' && (
+          <AboutUsView onNavigate={handleNavigate} />
         )}
 
         {currentRoute === 'faq' && (
